@@ -194,6 +194,12 @@ function FormPage() {
     return () => stopCamera()
   }, [step, startCamera, stopCamera])
 
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream
+    }
+  }, [stream])
+
   const isFormComplete = formData.name.trim() &&
     formData.department &&
     formData.funFact.trim() &&
@@ -379,7 +385,6 @@ function FormPage() {
                 <input
                   type="file"
                   accept="image/*"
-                  capture="user"
                   style={{ display: 'none' }}
                       onChange={async e => {
                         const file = e.target.files[0]
