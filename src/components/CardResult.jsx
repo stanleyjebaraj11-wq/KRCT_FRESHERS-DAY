@@ -8,7 +8,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
     getElement: () => document.getElementById('card-element')
   }))
 
-  const { cardId, name, department, funFact, dreamJob, photo } = data
+  const { cardId, name, department, funFact, dreamJob, photo, quote } = data
   const [qr, setQr] = useState('')
 
   useEffect(() => {
@@ -46,6 +46,14 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
 
         <h2 className="krct-name">{name}</h2>
         <p className="krct-dept">{department}</p>
+
+        {quote && (
+          <div className="krct-quote">
+            <span className="krct-quote-mark">&ldquo;</span>
+            {quote}
+            <span className="krct-quote-mark">&rdquo;</span>
+          </div>
+        )}
 
         <div className="krct-fields">
           <div className="krct-field">

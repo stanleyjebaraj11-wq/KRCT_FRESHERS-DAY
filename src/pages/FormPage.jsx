@@ -5,7 +5,7 @@ import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
-import { DEPARTMENTS } from '../utils/constants'
+import { DEPARTMENTS, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
 
 function FormPage() {
@@ -21,6 +21,7 @@ function FormPage() {
   const [photo, setPhoto] = useState(null)
   const [cardId, setCardId] = useState(null)
   const [madeInSeconds, setMadeInSeconds] = useState(null)
+  const [quote, setQuote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [focused, setFocused] = useState(false)
 
@@ -76,6 +77,7 @@ function FormPage() {
       setPhoto(photoDataUrl)
       setCardId(result.cardId)
       setMadeInSeconds(result.madeInSeconds)
+      setQuote(getRandomQuote())
       setStep('result')
       showToast('Card generated! 🎉', 'success')
     } catch (err) {
@@ -97,6 +99,7 @@ function FormPage() {
     setPhoto(null)
     setCardId(null)
     setMadeInSeconds(null)
+    setQuote('')
     setErrors({})
     setFocused(false)
     stopCamera()
@@ -445,6 +448,7 @@ function FormPage() {
               funFact: formData.funFact,
               dreamJob: formData.dreamJob,
               photo,
+              quote,
               madeInSeconds
             }}
             onDownload={handleDownload}
