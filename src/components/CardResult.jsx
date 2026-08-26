@@ -5,8 +5,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onMakeAnother 
     getElement: () => document.getElementById('card-element')
   }))
 
-  const { cardId, name, department, funFact, dreamJob, photo, madeInSeconds } = data
-  const isFast = madeInSeconds <= 60
+  const { cardId, name, department, funFact, dreamJob, photo } = data
 
   return (
     <div>
@@ -29,13 +28,6 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onMakeAnother 
           ) : (
             <div className="krct-photo krct-photo-empty">No Photo</div>
           )}
-          <span className={`krct-made-badge ${isFast ? 'fast' : 'slow'}`}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            Made in {madeInSeconds}s
-          </span>
         </div>
 
         <h2 className="krct-name">{name}</h2>

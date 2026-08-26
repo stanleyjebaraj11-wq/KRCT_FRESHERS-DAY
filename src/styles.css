@@ -249,20 +249,6 @@ label {
   font-weight: 400;
 }
 
-.timer-display {
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--gold);
-  margin-bottom: 24px;
-  font-variant-numeric: tabular-nums;
-  font-family: var(--font-mono);
-  padding: 12px 20px;
-  background: var(--gold-light);
-  border: 1px solid rgba(255, 200, 69, 0.3);
-  border-radius: var(--radius-sm);
-}
-
 .krct-card {
   position: relative;
   width: 100%;
@@ -367,36 +353,6 @@ label {
   color: var(--muted);
   font-size: 0.875rem;
   font-weight: 600;
-}
-
-.krct-made-badge {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: var(--font-mono);
-  white-space: nowrap;
-}
-
-.krct-made-badge.fast {
-  background: var(--gold-light);
-  color: var(--gold);
-  border: 1px solid rgba(255, 200, 69, 0.4);
-}
-
-.krct-made-badge.slow {
-  background: var(--bg-elevated);
-  color: var(--muted);
-  border: 1px solid var(--border);
 }
 
 .krct-name {
@@ -757,11 +713,6 @@ label {
 
   input, select, textarea {
     padding: 12px 14px;
-  }
-
-  .timer-display {
-    font-size: 1.125rem;
-    padding: 10px 16px;
   }
 }
 

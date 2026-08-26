@@ -269,13 +269,6 @@ function FormPage() {
 
         {step === 'photo' && (
           <div>
-            <div className="timer-display">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: '8px' }}>
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              {timer.current}s
-            </div>
             <div className="photo-capture" role="region" aria-label="Camera preview" style={{ position: 'relative' }}>
               {stream && (
                 <>
