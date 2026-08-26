@@ -6,6 +6,7 @@ import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
 import { DEPARTMENTS } from '../utils/constants'
+import { BRAND } from '../utils/brand'
 
 function FormPage() {
   const [step, setStep] = useState('form')
@@ -101,23 +102,59 @@ function FormPage() {
     stopCamera()
   }, [stopCamera])
 
+  const getCardBlob = useCallback(async () => {
+    if (!cardRef.current) return null
+    const dataUrl = await toPng(cardRef.current, {
+      backgroundColor: '#0a1128',
+      pixelRatio: 2,
+      quality: 0.95
+    })
+    const res = await fetch(dataUrl)
+    return await res.blob()
+  }, [])
+
   const handleDownload = useCallback(async () => {
-    if (!cardRef.current) return
     try {
-      const dataUrl = await toPng(cardRef.current, {
-        backgroundColor: '#0a1128',
-        pixelRatio: 2,
-        quality: 0.95
-      })
+      const blob = await getCardBlob()
+      if (!blob) return
+      const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.download = `KRCT-Fresher-Card-${cardId}.png`
-      link.href = dataUrl
+      link.href = url
       link.click()
+      URL.revokeObjectURL(url)
       showToast('Saved to downloads!', 'success')
     } catch (err) {
       showToast('Download failed', 'error')
     }
-  }, [cardId])
+  }, [cardId, getCardBlob])
+
+  const handleShare = useCallback(async () => {
+    try {
+      const blob = await getCardBlob()
+      if (!blob) return
+      const file = new File([blob], `KRCT-Fresher-Card-${cardId}.png`, { type: 'image/png' })
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          text: BRAND.shareText,
+          title: 'My KRCT Fresher Card'
+        })
+      } else {
+        await navigator.clipboard.writeText(BRAND.shareText).catch(() => {})
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.download = `KRCT-Fresher-Card-${cardId}.png`
+        link.href = url
+        link.click()
+        URL.revokeObjectURL(url)
+        showToast('Card downloaded & caption copied!', 'success')
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') return
+      showToast('Share failed', 'error')
+    }
+  }, [cardId, getCardBlob])
 
   const handleCopyCaption = useCallback(async () => {
     const caption = `Just got my KRCT Fresher Card! 🎓\n\n${formData.name} | ${formData.department}\n"${formData.funFact}"\nDream job: ${formData.dreamJob}\n\n#KRCT2026 #FreshersDay #WhereAmbitionMeetsExcellence`
@@ -391,6 +428,7 @@ function FormPage() {
             }}
             onDownload={handleDownload}
             onCopyCaption={handleCopyCaption}
+            onShare={handleShare}
             onMakeAnother={handleMakeAnother}
           />
         )}

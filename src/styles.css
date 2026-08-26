@@ -279,15 +279,30 @@ label {
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.krct-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.krct-logo {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 11px;
 }
 
 .krct-college {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  min-width: 0;
 }
 
 .krct-college-name {
@@ -430,6 +445,40 @@ label {
   border-top: 1px solid var(--border);
 }
 
+.krct-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.krct-qr img {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 3px;
+}
+
+.krct-qr-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.krct-footer-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+  min-width: 0;
+}
+
 .krct-hashtag {
   font-size: 0.75rem;
   font-weight: 700;
@@ -444,6 +493,18 @@ label {
   color: var(--muted);
   text-align: right;
   font-style: italic;
+}
+
+.krct-watermark {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-top: 14px;
+  opacity: 0.85;
 }
 
 .card-actions {
