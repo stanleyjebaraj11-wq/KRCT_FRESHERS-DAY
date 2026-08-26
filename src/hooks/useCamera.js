@@ -33,6 +33,7 @@ export function useCamera() {
 
   const capturePhoto = useCallback((videoEl, canvasEl) => {
     if (!videoEl || !canvasEl || !stream) return Promise.resolve(null)
+    if (!videoEl.videoWidth || !videoEl.videoHeight) return Promise.resolve(null)
 
     const size = Math.min(videoEl.videoWidth, videoEl.videoHeight)
     canvasEl.width = size
