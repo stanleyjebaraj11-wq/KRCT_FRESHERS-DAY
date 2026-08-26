@@ -54,9 +54,13 @@ function FormPage() {
     return Object.keys(newErrors).length === 0
   }, [formData])
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault()
-    if (!validateForm() || !photo) return
+  const handleContinue = useCallback(() => {
+    if (!validateForm()) return
+    setStep('photo')
+  }, [validateForm])
+
+  const submitCard = useCallback(async (photoDataUrl) => {
+    if (!photoDataUrl) return
 
     setIsSubmitting(true)
     try {
@@ -68,6 +72,7 @@ function FormPage() {
         madeInSeconds: timer.current,
         consentGiven: formData.consent
       })
+      setPhoto(photoDataUrl)
       setCardId(result.cardId)
       setMadeInSeconds(result.madeInSeconds)
       setStep('result')
@@ -77,7 +82,7 @@ function FormPage() {
     } finally {
       setIsSubmitting(false)
     }
-  }, [formData, photo, timer, validateForm])
+  }, [formData, timer, validateForm])
 
   const handleRetake = useCallback(() => {
     setPhoto(null)
@@ -155,7 +160,7 @@ function FormPage() {
         </header>
 
         {step === 'form' && (
-          <form onSubmit={handleSubmit} noValidate>
+          <form onSubmit={e => e.preventDefault()} noValidate>
             <div className="field-group">
               <label htmlFor="name">Full Name *</label>
               <input
@@ -238,9 +243,10 @@ function FormPage() {
             </div>
 
             <button
-              type="submit"
+              type="button"
               className="btn btn-primary"
               disabled={!isFormComplete || isSubmitting}
+              onClick={handleContinue}
             >
               {isSubmitting ? (
                 <>
@@ -290,12 +296,11 @@ function FormPage() {
                     onClick={async () => {
                       const dataUrl = await capturePhoto(videoRef.current, canvasRef.current)
                       if (dataUrl) {
-                        setPhoto(dataUrl)
                         stopCamera()
-                        setStep('result')
+                        await submitCard(dataUrl)
                       }
                     }}
-                    disabled={!stream}
+                    disabled={!stream || isSubmitting}
                     aria-label="Capture photo"
                   >
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -318,7 +323,7 @@ function FormPage() {
               <canvas ref={canvasRef} style={{ display: 'none' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
-              <label className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <label className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', opacity: isSubmitting ? 0.6 : 1, pointerEvents: isSubmitting ? 'none' : 'auto' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                   <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -330,34 +335,38 @@ function FormPage() {
                   accept="image/*"
                   capture="user"
                   style={{ display: 'none' }}
-                  onChange={e => {
-                    const file = e.target.files[0]
-                    if (file) {
-                      const reader = new FileReader()
-                      reader.onload = () => {
-                        const img = new Image()
-                        img.onload = () => {
-                          const canvas = document.createElement('canvas')
-                          const size = Math.min(img.width, img.height)
-                          canvas.width = size
-                          canvas.height = size
-                          const ctx = canvas.getContext('2d')
-                          const x = (img.width - size) / 2
-                          const y = (img.height - size) / 2
-                          ctx.drawImage(img, x, y, size, size, 0, 0, size, size)
-                          setPhoto(canvas.toDataURL('image/jpeg', 0.9))
-                          stopCamera()
-                          setStep('result')
+                      onChange={async e => {
+                        const file = e.target.files[0]
+                        if (file) {
+                          const reader = new FileReader()
+                          reader.onload = () => {
+                            const img = new Image()
+                            img.onload = async () => {
+                              const canvas = document.createElement('canvas')
+                              const size = Math.min(img.width, img.height)
+                              canvas.width = size
+                              canvas.height = size
+                              const ctx = canvas.getContext('2d')
+                              const x = (img.width - size) / 2
+                              const y = (img.height - size) / 2
+                              ctx.drawImage(img, x, y, size, size, 0, 0, size, size)
+                              const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+                              stopCamera()
+                              await submitCard(dataUrl)
+                            }
+                            img.src = reader.result
+                          }
+                          reader.readAsDataURL(file)
                         }
-                        img.src = reader.result
-                      }
-                      reader.readAsDataURL(file)
-                    }
-                  }}
+                      }}
                 />
               </label>
               <p style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.8125rem', margin: '0' }}>
-                {stream ? 'Tap green circle to capture, or upload from gallery' : 'Select a photo from your gallery'}
+                {isSubmitting
+                  ? 'Generating your card...'
+                  : stream
+                    ? 'Tap green circle to capture, or upload from gallery'
+                    : 'Select a photo from your gallery'}
               </p>
             </div>
             <button
