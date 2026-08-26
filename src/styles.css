@@ -263,20 +263,242 @@ label {
   border-radius: var(--radius-sm);
 }
 
-.card-preview {
+.krct-card {
+  position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
   border-radius: var(--radius);
   overflow: hidden;
-  background: var(--bg-card);
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(0, 212, 170, 0.12), transparent 60%),
+    radial-gradient(100% 70% at 100% 0%, rgba(255, 200, 69, 0.10), transparent 55%),
+    linear-gradient(160deg, #0c1530 0%, #0a1128 100%);
+  border: 1px solid var(--border-light);
   box-shadow: var(--shadow);
-  margin-bottom: 24px;
+  padding: 26px 22px 18px;
+  color: var(--fg);
+  margin-bottom: 22px;
+}
+
+.krct-card-glow {
+  position: absolute;
+  top: -50%;
+  right: -40%;
+  width: 130%;
+  height: 130%;
+  background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.krct-card-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.krct-college {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.krct-college-name {
+  font-size: 1.0625rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.krct-college-sub {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+}
+
+.krct-card-id {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  background: var(--gold-light);
+  border: 1px solid rgba(255, 200, 69, 0.3);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.krct-card-divider {
+  position: relative;
+  z-index: 1;
+  height: 1px;
+  margin: 16px 0 18px;
+  background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+}
+
+.krct-photo-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.krct-photo {
+  width: min(200px, 58%);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 18px;
+  background: #000;
+  border: 3px solid var(--gold);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+.krct-photo-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.krct-made-badge {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.krct-made-badge.fast {
+  background: var(--gold-light);
+  color: var(--gold);
+  border: 1px solid rgba(255, 200, 69, 0.4);
+}
+
+.krct-made-badge.slow {
+  background: var(--bg-elevated);
+  color: var(--muted);
   border: 1px solid var(--border);
+}
+
+.krct-name {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.krct-dept {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.krct-fields {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px 0 6px;
+}
+
+.krct-field {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.krct-field-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 5px;
+  font-family: var(--font-mono);
+}
+
+.krct-field-value {
+  font-size: 0.9375rem;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.krct-capitalize {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.krct-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.krct-hashtag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+.krct-tagline {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: right;
+  font-style: italic;
 }
 
 .card-actions {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+.card-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
@@ -518,30 +740,6 @@ label {
   font-family: var(--font-mono);
 }
 
-.card-field {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  margin-bottom: 14px;
-}
-
-.card-field-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  margin-bottom: 6px;
-  font-family: var(--font-mono);
-}
-
-.card-field-value {
-  font-size: 0.9375rem;
-  color: var(--fg);
-  line-height: 1.5;
-}
-
 @media (max-width: 480px) {
   .container {
     padding: 16px 12px 32px;
@@ -564,10 +762,6 @@ label {
   .timer-display {
     font-size: 1.125rem;
     padding: 10px 16px;
-  }
-
-  .card-preview {
-    aspect-ratio: 4 / 5;
   }
 }
 
