@@ -284,25 +284,12 @@ label {
   gap: 12px;
 }
 
-.krct-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
 .krct-logo {
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  border-radius: 11px;
-}
-
-.krct-college {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
+  height: 38px;
+  width: auto;
+  max-width: 72%;
+  object-fit: contain;
+  flex-shrink: 1;
 }
 
 .krct-college-name {
@@ -313,12 +300,15 @@ label {
   color: #fff;
 }
 
-.krct-college-sub {
-  font-size: 0.6rem;
+.krct-card-sub {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  font-size: 0.62rem;
   font-weight: 600;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   font-family: var(--font-mono);
 }
 

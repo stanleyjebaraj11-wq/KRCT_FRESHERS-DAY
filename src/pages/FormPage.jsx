@@ -134,27 +134,43 @@ function FormPage() {
       const blob = await getCardBlob()
       if (!blob) return
       const file = new File([blob], `KRCT-Fresher-Card-${cardId}.png`, { type: 'image/png' })
+      const shareData = { title: 'My KRCT Fresher Card', text: BRAND.shareText }
+
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          text: BRAND.shareText,
-          title: 'My KRCT Fresher Card'
-        })
-      } else {
-        await navigator.clipboard.writeText(BRAND.shareText).catch(() => {})
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.download = `KRCT-Fresher-Card-${cardId}.png`
-        link.href = url
-        link.click()
-        URL.revokeObjectURL(url)
-        showToast('Card downloaded & caption copied!', 'success')
+        await navigator.share({ ...shareData, files: [file] })
+        return
       }
+      if (navigator.share) {
+        // Text/url share (desktop Chrome, etc.) — no file support
+        await navigator.share(shareData)
+        return
+      }
+      throw new Error('no-share')
     } catch (err) {
       if (err && err.name === 'AbortError') return
-      showToast('Share failed', 'error')
+      // Fallback: download the card + copy the caption
+      try {
+        const blob = await getCardBlob()
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.download = `KRCT-Fresher-Card-${cardId}.png`
+          link.href = url
+          link.click()
+          URL.revokeObjectURL(url)
+        }
+        await navigator.clipboard.writeText(BRAND.shareText).catch(() => {})
+        showToast('Card downloaded & caption copied!', 'success')
+      } catch {
+        showToast('Sharing is not supported here. Use WhatsApp or Download.', 'error')
+      }
     }
   }, [cardId, getCardBlob])
+
+  const handleWhatsApp = useCallback(() => {
+    const text = encodeURIComponent(`${BRAND.shareText}\n${BRAND.qrUrl}`)
+    window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener')
+  }, [])
 
   const handleCopyCaption = useCallback(async () => {
     const caption = `Just got my KRCT Fresher Card! 🎓\n\n${formData.name} | ${formData.department}\n"${formData.funFact}"\nDream job: ${formData.dreamJob}\n\n#KRCT2026 #FreshersDay #WhereAmbitionMeetsExcellence`
@@ -429,6 +445,7 @@ function FormPage() {
             onDownload={handleDownload}
             onCopyCaption={handleCopyCaption}
             onShare={handleShare}
+            onWhatsApp={handleWhatsApp}
             onMakeAnother={handleMakeAnother}
           />
         )}

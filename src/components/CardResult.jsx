@@ -3,7 +3,7 @@ import QRCode from 'qrcode'
 import logo from '../assets/logo.png'
 import { BRAND } from '../utils/brand'
 
-const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onMakeAnother }, ref) => {
+const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onMakeAnother }, ref) => {
   useImperativeHandle(ref, () => ({
     getElement: () => document.getElementById('card-element')
   }))
@@ -29,15 +29,10 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onMak
         <div className="krct-card-glow" />
 
         <div className="krct-card-header">
-          <div className="krct-brand">
-            <img className="krct-logo" src={logo} alt="KRCT logo" />
-            <div className="krct-college">
-              <span className="krct-college-name">{BRAND.collegeName}</span>
-              <span className="krct-college-sub">Autonomous · NAAC A+ · Anna University</span>
-            </div>
-          </div>
+          <img className="krct-logo" src={logo} alt="K.Ramakrishnan College of Technology" />
           <span className="krct-card-id">#{cardId}</span>
         </div>
+        <div className="krct-card-sub">K.Ramakrishnan College of Technology · Fresher Card 2026</div>
 
         <div className="krct-card-divider" />
 
@@ -98,13 +93,21 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onMak
             Share
           </button>
         </div>
-        <button type="button" className="btn btn-secondary" onClick={onCopyCaption}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-          </svg>
-          Copy Caption
-        </button>
+        <div className="card-actions-row">
+          <button type="button" className="btn btn-secondary" onClick={onWhatsApp}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+            WhatsApp
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={onCopyCaption}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            Copy Caption
+          </button>
+        </div>
         <button type="button" className="btn btn-ghost" onClick={onMakeAnother}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginRight: '4px' }}>
             <polyline points="1 4 1 10 7 10" />
