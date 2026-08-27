@@ -42,21 +42,19 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
           ) : (
             <div className="krct-photo krct-photo-empty">No Photo</div>
           )}
+          {character && (
+            <div className="krct-character-badge" style={{ background: character.color }}>
+              <span className="krct-character-emoji">{character.emoji}</span>
+            </div>
+          )}
         </div>
 
         <h2 className="krct-name">{name}</h2>
         <p className="krct-dept">{department}</p>
 
-        {character && (
-          <div className="krct-character" style={{ borderColor: character.color }}>
-            <span className="krct-character-emoji">{character.emoji}</span>
-            <span className="krct-character-title" style={{ color: character.color }}>{character.title}</span>
-          </div>
-        )}
-
         {favouriteChar && favouriteChar !== 'None / Skip' && (
           <div className="krct-fav-char">
-            Fav Character: <strong>{favouriteChar}</strong>
+            Fav: <strong>{favouriteChar}</strong>
           </div>
         )}
 

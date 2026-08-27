@@ -348,6 +348,26 @@ label {
   margin-bottom: 16px;
 }
 
+.krct-character-badge {
+  position: absolute;
+  bottom: -8px;
+  right: calc(50% - 108px);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--bg-card);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+
+.krct-character-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
 .krct-photo {
   width: min(200px, 58%);
   aspect-ratio: 1;
@@ -742,30 +762,20 @@ label {
   font-weight: 500;
 }
 
-.krct-character {
+.krct-fav-char {
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 8px 16px;
-  border: 1px solid;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.krct-character-emoji {
-  font-size: 1.2rem;
-}
-
-.krct-character-title {
+  text-align: center;
   font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+
+.krct-fav-char strong {
+  color: var(--gold);
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: var(--font-mono);
 }
 
 .quiz {
