@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { toPng } from 'html-to-image'
 import CardResult from '../components/CardResult'
-import Quiz from '../components/Quiz'
+import StyleSelector from '../components/StyleSelector'
 import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
 import { DEPARTMENTS, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
-import { calculateCharacter } from '../utils/quiz'
 import logo from '../assets/logo.png'
 
 function FormPage() {
@@ -27,8 +26,7 @@ function FormPage() {
   const [quote, setQuote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [focused, setFocused] = useState(false)
-  const [character, setCharacter] = useState(null)
-  const [favouriteChar, setFavouriteChar] = useState(null)
+  const [selectedStyle, setSelectedStyle] = useState(null)
 
   const timer = useTimer(focused)
   const { stream, startCamera, stopCamera, capturePhoto, error: cameraError } = useCamera()
@@ -83,7 +81,7 @@ function FormPage() {
       setCardId(result.cardId)
       setMadeInSeconds(result.madeInSeconds)
       setQuote(getRandomQuote())
-      setStep('quiz')
+      setStep('style')
     } catch (err) {
       showToast(err.message || 'Failed to generate card', 'error')
     } finally {
@@ -104,19 +102,16 @@ function FormPage() {
     setCardId(null)
     setMadeInSeconds(null)
     setQuote('')
-    setCharacter(null)
-    setFavouriteChar(null)
+    setSelectedStyle(null)
     setErrors({})
     setFocused(false)
     stopCamera()
   }, [stopCamera])
 
-  const handleQuizComplete = useCallback((answers, favChar) => {
-    const result = calculateCharacter(answers)
-    setCharacter(result)
-    setFavouriteChar(favChar)
+  const handleStyleSelect = useCallback((style) => {
+    setSelectedStyle(style)
     setStep('result')
-    showToast(`You are ${result.emoji} ${result.title}!`, 'success')
+    showToast('Card generated! 🎉', 'success')
   }, [])
 
   const getCardBlob = useCallback(async () => {
@@ -504,10 +499,11 @@ function FormPage() {
           </div>
         )}
 
-        {step === 'quiz' && (
-          <Quiz
-            onComplete={handleQuizComplete}
+        {step === 'style' && (
+          <StyleSelector
+            onContinue={handleStyleSelect}
             onBack={() => setStep('photo')}
+            studentData={{ name: formData.name, photo }}
           />
         )}
 
@@ -523,8 +519,7 @@ function FormPage() {
               photo,
               quote,
               madeInSeconds,
-              character,
-              favouriteChar
+              selectedStyle
             }}
             onDownload={handleDownload}
             onCopyCaption={handleCopyCaption}

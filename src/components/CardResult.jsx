@@ -8,7 +8,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
     getElement: () => document.getElementById('card-element')
   }))
 
-  const { cardId, name, department, funFact, dreamJob, photo, quote, character, favouriteChar } = data
+  const { cardId, name, department, funFact, dreamJob, photo, quote, selectedStyle } = data
   const [qr, setQr] = useState('')
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
 
   return (
     <div>
-      <div id="card-element" className="krct-card">
+      <div id="card-element" className={`krct-card krct-card-${selectedStyle || 'default'}`}>
         <div className="krct-card-glow" />
 
         <div className="krct-card-header">
@@ -42,21 +42,10 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
           ) : (
             <div className="krct-photo krct-photo-empty">No Photo</div>
           )}
-          {character && (
-            <div className="krct-character-badge" style={{ background: character.color }}>
-              <span className="krct-character-emoji">{character.emoji}</span>
-            </div>
-          )}
         </div>
 
         <h2 className="krct-name">{name}</h2>
         <p className="krct-dept">{department}</p>
-
-        {favouriteChar && favouriteChar !== 'None / Skip' && (
-          <div className="krct-fav-char">
-            Fav: <strong>{favouriteChar}</strong>
-          </div>
-        )}
 
         {quote && (
           <div className="krct-quote">
