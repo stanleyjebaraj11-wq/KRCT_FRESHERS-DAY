@@ -106,29 +106,51 @@ function FormPage() {
   }, [stopCamera])
 
   const getCardBlob = useCallback(async () => {
-    if (!cardRef.current) return null
-    const dataUrl = await toPng(cardRef.current, {
-      backgroundColor: '#0a1128',
-      pixelRatio: 2,
-      quality: 0.95
-    })
-    const res = await fetch(dataUrl)
-    return await res.blob()
+    const el = cardRef.current?.getElement?.() || cardRef.current
+    if (!el) {
+      console.error('Card element not found')
+      return null
+    }
+    try {
+      const dataUrl = await toPng(el, {
+        backgroundColor: '#0a1128',
+        pixelRatio: 2,
+        quality: 0.95,
+        skipAutoScale: true,
+        cacheBust: true,
+        skipFonts: true,
+        filter: (node) => {
+          if (node.tagName === 'STYLE') return false
+          return true
+        }
+      })
+      const res = await fetch(dataUrl)
+      return await res.blob()
+    } catch (err) {
+      console.error('toPng failed:', err)
+      throw err
+    }
   }, [])
 
   const handleDownload = useCallback(async () => {
     try {
       const blob = await getCardBlob()
-      if (!blob) return
+      if (!blob) {
+        showToast('Could not generate card image', 'error')
+        return
+      }
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.download = `KRCT-Fresher-Card-${cardId}.png`
       link.href = url
+      document.body.appendChild(link)
       link.click()
-      URL.revokeObjectURL(url)
+      document.body.removeChild(link)
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
       showToast('Saved to downloads!', 'success')
     } catch (err) {
-      showToast('Download failed', 'error')
+      console.error('Download error:', err)
+      showToast('Download failed: ' + (err.message || 'Unknown error'), 'error')
     }
   }, [cardId, getCardBlob])
 
@@ -321,7 +343,7 @@ function FormPage() {
               ) : (
                 'Continue to Photo →'
               )}
-              <style jsx>{`
+              <style>{`
                 @keyframes spin { to { transform: rotate(360deg); } }
                 .spinner { animation: spin 1s linear infinite; }
               `}</style>
