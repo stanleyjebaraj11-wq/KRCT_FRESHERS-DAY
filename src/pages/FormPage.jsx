@@ -28,6 +28,7 @@ function FormPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [focused, setFocused] = useState(false)
   const [character, setCharacter] = useState(null)
+  const [favouriteChar, setFavouriteChar] = useState(null)
 
   const timer = useTimer(focused)
   const { stream, startCamera, stopCamera, capturePhoto, error: cameraError } = useCamera()
@@ -104,14 +105,16 @@ function FormPage() {
     setMadeInSeconds(null)
     setQuote('')
     setCharacter(null)
+    setFavouriteChar(null)
     setErrors({})
     setFocused(false)
     stopCamera()
   }, [stopCamera])
 
-  const handleQuizComplete = useCallback((answers) => {
+  const handleQuizComplete = useCallback((answers, favChar) => {
     const result = calculateCharacter(answers)
     setCharacter(result)
+    setFavouriteChar(favChar)
     setStep('result')
     showToast(`You are ${result.emoji} ${result.title}!`, 'success')
   }, [])
@@ -520,7 +523,8 @@ function FormPage() {
               photo,
               quote,
               madeInSeconds,
-              character
+              character,
+              favouriteChar
             }}
             onDownload={handleDownload}
             onCopyCaption={handleCopyCaption}

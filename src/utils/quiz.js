@@ -57,75 +57,115 @@ export const CHARACTERS = [
   }
 ]
 
+export const FAVOURITE_CHARACTERS = [
+  'Iron Man',
+  'Batman',
+  'Superman',
+  'Spider-Man',
+  'Captain America',
+  'Thor',
+  'Hulk',
+  'Wolverine',
+  'Deadpool',
+  'Doctor Strange',
+  'Black Panther',
+  'Thanos',
+  'Joker',
+  'Sherlock Holmes',
+  'Dexter',
+  'Luffy',
+  'Naruto',
+  'Goku',
+  'Vegeta',
+  'Light Yagami',
+  'L Lawliet',
+  'Eren Yeager',
+  'Gojo Satoru',
+  'Zoro',
+  'Saitama',
+  'Levi Ackerman',
+  'Alakh Pandey (Physics Wallah)',
+  'Elon Musk',
+  'MS Dhoni',
+  'Virat Kohli',
+  'Thalapathy Vijay',
+  'Allu Arjun',
+  'Shah Rukh Khan',
+  'Rajinikanth',
+  'APJ Abdul Kalam',
+  'Swami Vivekananda',
+  'None / Skip'
+]
+
 export const QUESTIONS = [
   {
     id: 1,
-    question: 'You see a locked door. What do you do?',
+    question: 'First day at college. You...',
     options: [
-      { text: 'Look for the key or find another way in', scores: { 'the-coder': 3, 'the-strategist': 2 } },
-      { text: 'Knock confidently — someone will open it', scores: { 'the-leader': 3, 'the-healer': 1 } },
-      { text: 'Decorate the wall next to it while you wait', scores: { 'the-artist': 3, 'the-rebel': 1 } },
-      { text: 'Check what\'s behind the building first', scores: { 'the-explorer': 3, 'the-scholar': 1 } }
+      { text: 'Scan every notice board and club list', scores: { 'the-explorer': 3, 'the-scholar': 1 } },
+      { text: 'Walk up to strangers and start talking', scores: { 'the-leader': 3, 'the-healer': 2 } },
+      { text: 'Find the best corner to sit and observe', scores: { 'the-strategist': 3, 'the-artist': 1 } },
+      { text: 'Check if the campus has good WiFi', scores: { 'the-coder': 3, 'the-rebel': 1 } }
     ]
   },
   {
     id: 2,
-    question: 'It\'s Friday night. What sounds best?',
+    question: 'Your canteen squad is deciding lunch. You...',
     options: [
-      { text: 'Building a side project from scratch', scores: { 'the-coder': 3, 'the-rebel': 2 } },
-      { text: 'Hosting a dinner with friends', scores: { 'the-leader': 3, 'the-healer': 2 } },
-      { text: 'Sketching or playing music alone', scores: { 'the-artist': 3, 'the-scholar': 1 } },
-      { text: 'Exploring a place you\'ve never been', scores: { 'the-explorer': 3, 'the-strategist': 1 } }
+      { text: 'Decide for everyone — "We\'re going HERE"', scores: { 'the-leader': 3, 'the-rebel': 1 } },
+      { text: 'Go wherever your best friend goes', scores: { 'the-healer': 3, 'the-artist': 1 } },
+      { text: 'Try the weirdest thing on the menu', scores: { 'the-explorer': 3, 'the-rebel': 2 } },
+      { text: 'Skip lunch, you\'re on a mission', scores: { 'the-strategist': 2, 'the-coder': 3 } }
     ]
   },
   {
     id: 3,
-    question: 'A group project is falling apart. You...',
+    question: 'College fest announcement drops. Your reaction?',
     options: [
-      { text: 'Take charge and delegate tasks', scores: { 'the-leader': 3, 'the-strategist': 2 } },
-      { text: 'Fix the technical issues quietly', scores: { 'the-coder': 3, 'the-scholar': 2 } },
-      { text: 'Try to keep everyone\'s spirits up', scores: { 'the-healer': 3, 'the-artist': 1 } },
-      { text: 'Suggest a completely new approach', scores: { 'the-rebel': 3, 'the-explorer': 2 } }
+      { text: 'Already Volunteering to organize it', scores: { 'the-leader': 3, 'the-rebel': 2 } },
+      { text: 'Planning which day to attend and with whom', scores: { 'the-healer': 2, 'the-strategist': 3 } },
+      { text: 'Signing up for every competition', scores: { 'the-explorer': 3, 'the-artist': 2 } },
+      { text: 'Will go only if friends drag you', scores: { 'the-coder': 2, 'the-scholar': 3 } }
     ]
   },
   {
     id: 4,
-    question: 'Pick a superpower:',
+    question: 'Pick a hangout spot on campus:',
     options: [
-      { text: 'Read minds', scores: { 'the-strategist': 3, 'the-healer': 2 } },
-      { text: 'Time travel', scores: { 'the-explorer': 3, 'the-scholar': 2 } },
-      { text: 'Create anything from thin air', scores: { 'the-artist': 3, 'the-coder': 2 } },
-      { text: 'Command anyone to follow you', scores: { 'the-leader': 3, 'the-rebel': 2 } }
+      { text: 'The library rooftop or quiet corner', scores: { 'the-scholar': 3, 'the-artist': 2 } },
+      { text: 'The busiest spot — near the canteen', scores: { 'the-leader': 2, 'the-healer': 3 } },
+      { text: 'Behind the lab, scheming something', scores: { 'the-strategist': 3, 'the-coder': 2 } },
+      { text: 'Literally anywhere you haven\'t been', scores: { 'the-explorer': 3, 'the-rebel': 2 } }
     ]
   },
   {
     id: 5,
-    question: 'What\'s your study style?',
+    question: 'A senior ragged you. You...',
     options: [
-      { text: 'Late night, headphones on, deep focus', scores: { 'the-coder': 3, 'the-scholar': 3 } },
-      { text: 'Teach it to someone else to learn it', scores: { 'the-leader': 2, 'the-healer': 3 } },
-      { text: 'Draw diagrams and color-coded notes', scores: { 'the-artist': 3, 'the-strategist': 1 } },
-      { text: 'Skip the book, learn by doing', scores: { 'the-rebel': 3, 'the-explorer': 3 } }
+      { text: 'Outsmart them with a comeback they didn\'t expect', scores: { 'the-strategist': 3, 'the-rebel': 3 } },
+      { text: 'Laugh it off and make them your friend', scores: { 'the-healer': 3, 'the-leader': 2 } },
+      { text: 'Record it and post it as a reel', scores: { 'the-artist': 3, 'the-rebel': 2 } },
+      { text: 'Quietly observe and note who to avoid', scores: { 'the-coder': 2, 'the-scholar': 3 } }
     ]
   },
   {
     id: 6,
-    question: 'You find ₹500 on the ground. You...',
+    question: 'Weekend plans?',
     options: [
-      { text: 'Invest it or put it toward a gadget', scores: { 'the-coder': 2, 'the-strategist': 3 } },
-      { text: 'Treat your friends to chai', scores: { 'the-healer': 3, 'the-leader': 2 } },
-      { text: 'Buy art supplies or a book', scores: { 'the-artist': 2, 'the-scholar': 3 } },
-      { text: 'Use it for an impromptu trip', scores: { 'the-explorer': 3, 'the-rebel': 2 } }
+      { text: 'Binge a whole anime/series in one day', scores: { 'the-scholar': 2, 'the-rebel': 3 } },
+      { text: 'Road trip with friends — no plan, just go', scores: { 'the-explorer': 3, 'the-healer': 2 } },
+      { text: 'Work on a personal project or hobby', scores: { 'the-coder': 3, 'the-artist': 3 } },
+      { text: 'Sleep. You earned it.', scores: { 'the-healer': 2, 'the-strategist': 1 } }
     ]
   },
   {
     id: 7,
-    question: 'Which quote speaks to you most?',
+    question: 'You get a free T-shirt at fresher day. You...',
     options: [
-      { text: '"Move fast and break things"', scores: { 'the-rebel': 3, 'the-coder': 2 } },
-      { text: '"Be the change you wish to see"', scores: { 'the-leader': 3, 'the-healer': 2 } },
-      { text: '"Creativity takes courage"', scores: { 'the-artist': 3, 'the-explorer': 1 } },
-      { text: '"Knowledge is power"', scores: { 'the-scholar': 3, 'the-strategist': 2 } }
+      { text: 'Wear it every day for a month straight', scores: { 'the-healer': 3, 'the-rebel': 1 } },
+      { text: 'Customize it with markers and patches', scores: { 'the-artist': 3, 'the-rebel': 2 } },
+      { text: 'Frame it — it\'s a memory now', scores: { 'the-scholar': 3, 'the-strategist': 1 } },
+      { text: 'Give it to someone who needs it more', scores: { 'the-leader': 3, 'the-healer': 3 } }
     ]
   }
 ]

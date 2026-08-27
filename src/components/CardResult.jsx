@@ -8,7 +8,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
     getElement: () => document.getElementById('card-element')
   }))
 
-  const { cardId, name, department, funFact, dreamJob, photo, quote, character } = data
+  const { cardId, name, department, funFact, dreamJob, photo, quote, character, favouriteChar } = data
   const [qr, setQr] = useState('')
 
   useEffect(() => {
@@ -51,6 +51,12 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
           <div className="krct-character" style={{ borderColor: character.color }}>
             <span className="krct-character-emoji">{character.emoji}</span>
             <span className="krct-character-title" style={{ color: character.color }}>{character.title}</span>
+          </div>
+        )}
+
+        {favouriteChar && favouriteChar !== 'None / Skip' && (
+          <div className="krct-fav-char">
+            Fav Character: <strong>{favouriteChar}</strong>
           </div>
         )}
 
