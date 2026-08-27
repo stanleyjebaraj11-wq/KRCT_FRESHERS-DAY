@@ -7,6 +7,7 @@ import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
 import { DEPARTMENTS, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
+import logo from '../assets/logo.png'
 
 function FormPage() {
   const [step, setStep] = useState('form')
@@ -210,6 +211,35 @@ function FormPage() {
     }
   }, [formData])
 
+  const handleInstagramStory = useCallback(async () => {
+    try {
+      const blob = await getCardBlob()
+      if (!blob) {
+        showToast('Could not generate card image', 'error')
+        return
+      }
+      const file = new File([blob], `KRCT-Fresher-Card-${cardId}.png`, { type: 'image/png' })
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ title: 'My KRCT Fresher Card', files: [file] })
+        showToast('Shared! Select Instagram from the share menu.', 'success')
+        return
+      }
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.download = `KRCT-Fresher-Card-${cardId}.png`
+      link.href = url
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+      showToast('Image saved! Open Instagram → Story → pick from gallery.', 'success')
+    } catch (err) {
+      if (err && err.name === 'AbortError') return
+      console.error('Instagram share error:', err)
+      showToast('Could not share. Try downloading instead.', 'error')
+    }
+  }, [cardId, getCardBlob])
+
   useEffect(() => {
     if (step === 'photo') {
       startCamera()
@@ -235,6 +265,7 @@ function FormPage() {
     <div className="container">
       <div className="page">
         <header className="header">
+          <img className="header-logo" src={logo} alt="KRCT Logo" />
           <div className="logo">
             K.Ramakrishnan College of Technology
             <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
@@ -477,6 +508,7 @@ function FormPage() {
             onCopyCaption={handleCopyCaption}
             onShare={handleShare}
             onWhatsApp={handleWhatsApp}
+            onInstagramStory={handleInstagramStory}
             onMakeAnother={handleMakeAnother}
           />
         )}

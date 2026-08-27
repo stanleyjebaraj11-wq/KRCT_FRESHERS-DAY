@@ -3,7 +3,7 @@ import QRCode from 'qrcode'
 import logo from '../assets/logo.png'
 import { BRAND } from '../utils/brand'
 
-const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onMakeAnother }, ref) => {
+const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onInstagramStory, onMakeAnother }, ref) => {
   useImperativeHandle(ref, () => ({
     getElement: () => document.getElementById('card-element')
   }))
@@ -108,12 +108,13 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
             </svg>
             WhatsApp
           </button>
-          <button type="button" className="btn btn-secondary" onClick={onCopyCaption}>
+          <button type="button" className="btn btn-secondary" onClick={onInstagramStory}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
             </svg>
-            Copy Caption
+            IG Story
           </button>
         </div>
         <button type="button" className="btn btn-ghost" onClick={onMakeAnother}>
