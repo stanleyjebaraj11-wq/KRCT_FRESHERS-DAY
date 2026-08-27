@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { toPng } from 'html-to-image'
 import CardResult from '../components/CardResult'
+import Quiz from '../components/Quiz'
 import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
 import { DEPARTMENTS, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
+import { calculateCharacter } from '../utils/quiz'
 import logo from '../assets/logo.png'
 
 function FormPage() {
@@ -25,6 +27,7 @@ function FormPage() {
   const [quote, setQuote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [focused, setFocused] = useState(false)
+  const [character, setCharacter] = useState(null)
 
   const timer = useTimer(focused)
   const { stream, startCamera, stopCamera, capturePhoto, error: cameraError } = useCamera()
@@ -79,8 +82,7 @@ function FormPage() {
       setCardId(result.cardId)
       setMadeInSeconds(result.madeInSeconds)
       setQuote(getRandomQuote())
-      setStep('result')
-      showToast('Card generated! 🎉', 'success')
+      setStep('quiz')
     } catch (err) {
       showToast(err.message || 'Failed to generate card', 'error')
     } finally {
@@ -101,10 +103,18 @@ function FormPage() {
     setCardId(null)
     setMadeInSeconds(null)
     setQuote('')
+    setCharacter(null)
     setErrors({})
     setFocused(false)
     stopCamera()
   }, [stopCamera])
+
+  const handleQuizComplete = useCallback((answers) => {
+    const result = calculateCharacter(answers)
+    setCharacter(result)
+    setStep('result')
+    showToast(`You are ${result.emoji} ${result.title}!`, 'success')
+  }, [])
 
   const getCardBlob = useCallback(async () => {
     const el = cardRef.current?.getElement?.() || cardRef.current
@@ -491,6 +501,13 @@ function FormPage() {
           </div>
         )}
 
+        {step === 'quiz' && (
+          <Quiz
+            onComplete={handleQuizComplete}
+            onBack={() => setStep('photo')}
+          />
+        )}
+
         {step === 'result' && (
           <CardResult
             ref={cardRef}
@@ -502,7 +519,8 @@ function FormPage() {
               dreamJob: formData.dreamJob,
               photo,
               quote,
-              madeInSeconds
+              madeInSeconds,
+              character
             }}
             onDownload={handleDownload}
             onCopyCaption={handleCopyCaption}
