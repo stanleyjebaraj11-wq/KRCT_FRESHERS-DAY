@@ -23,61 +23,182 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
     return () => { active = false }
   }, [])
 
+  const photoEl = photo
+    ? <img src={photo} alt={`${name}'s photo`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    : <span>YOUR PHOTO</span>
+
+  const renderFuturistic = () => (
+    <div className="style-final futuristic-final">
+      <div className="tech-lines line-one" />
+      <div className="tech-lines line-two" />
+      <div className="tech-lines line-three" />
+      <div className="tech-corner top-left" />
+      <div className="tech-corner top-right" />
+      <div className="tech-corner bottom-left" />
+      <div className="tech-corner bottom-right" />
+
+      <div className="sf-header">
+        <strong>KRCT</strong>
+        <span>ENGINEERING THE FUTURE</span>
+      </div>
+
+      <div className="sf-year">2026</div>
+
+      <div className="sf-photo-circle">
+        <div className="sf-hud-ring">
+          <div className="sf-photo-inner">{photoEl}</div>
+        </div>
+      </div>
+
+      <div className="sf-dept">{department}</div>
+
+      <div className="sf-side-text">FUTURISTIC</div>
+
+      <div className="sf-bottom">
+        <p className="sf-welcome">WELCOME, FUTURE</p>
+        <h2 className="sf-name">{name}!</h2>
+        <p className="sf-quote">"{quote || 'The future is being built by you.'}"</p>
+        <div className="sf-fields">
+          <div className="sf-field"><span>Fun Fact:</span> {funFact}</div>
+          <div className="sf-field"><span>Dream Job:</span> {dreamJob}</div>
+        </div>
+        <div className="sf-qr">
+          {qr && <img src={qr} alt="QR" />}
+          <span>#{cardId}</span>
+        </div>
+      </div>
+
+      <div className="sf-building-line">▱ ▰ ▱ ▰ ▱ ▰ ▱</div>
+    </div>
+  )
+
+  const renderDreamer = () => (
+    <div className="style-final dreamer-final">
+      <div className="df-stars">✦ · ✧ · ★</div>
+      <div className="df-moon">☾</div>
+
+      <div className="df-header">
+        <strong>KRCT</strong>
+        <span>DREAM • BELIEVE • ACHIEVE</span>
+      </div>
+
+      <div className="df-photo-ring">
+        <div className="df-photo-inner">{photoEl}</div>
+      </div>
+
+      <div className="df-dept">{department}</div>
+
+      <div className="df-side-text">The future is yours</div>
+
+      <div className="df-bottom">
+        <p className="df-welcome">WELCOME, FUTURE</p>
+        <h2 className="df-name">{name}!</h2>
+        <div className="df-divider">✦</div>
+        <p className="df-quote">"{quote || 'Dream boldly. Your journey is just beginning.'}"</p>
+        <div className="df-fields">
+          <div className="df-field"><span>Fun Fact:</span> {funFact}</div>
+          <div className="df-field"><span>Dream Job:</span> {dreamJob}</div>
+        </div>
+        <div className="df-qr">
+          {qr && <img src={qr} alt="QR" />}
+          <span>#{cardId}</span>
+        </div>
+      </div>
+
+      <div className="df-cloud df-cloud-one" />
+      <div className="df-cloud df-cloud-two" />
+    </div>
+  )
+
+  const renderBold = () => (
+    <div className="style-final bold-final">
+      <div className="bf-dots" />
+      <div className="bf-slash bf-slash-one" />
+      <div className="bf-slash bf-slash-two" />
+
+      <div className="bf-header">
+        <strong>KRCT</strong>
+        <span>RISE. FOCUS. CONQUER.</span>
+      </div>
+
+      <div className="bf-bg-text">RISE<br />FOCUS<br />CONQUER</div>
+
+      <div className="bf-photo-frame">
+        <div className="bf-photo-inner">{photoEl}</div>
+      </div>
+
+      <div className="bf-dept">{department}</div>
+
+      <div className="bf-bottom">
+        <p className="bf-welcome">WELCOME, FUTURE</p>
+        <h2 className="bf-name">{name}!</h2>
+        <p className="bf-quote">"{quote || 'Don\'t just chase the future. Create it.'}"</p>
+        <div className="bf-fields">
+          <div className="bf-field"><span>Fun Fact:</span> {funFact}</div>
+          <div className="bf-field"><span>Dream Job:</span> {dreamJob}</div>
+        </div>
+        <div className="bf-strip">BUILD YOUR LEGACY</div>
+        <div className="bf-qr">
+          {qr && <img src={qr} alt="QR" />}
+          <span>#{cardId}</span>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderClassic = () => (
+    <div className="style-final classic-final">
+      <div className="cf-border" />
+
+      <div className="cf-header">
+        <div className="cf-logo">🎓</div>
+        <div>
+          <strong>KRCT</strong>
+          <span>COLLEGE OF ENGINEERING</span>
+          <small>AND TECHNOLOGY</small>
+        </div>
+      </div>
+
+      <div className="cf-line">───── ✦ ─────</div>
+
+      <div className="cf-photo-ring">
+        <div className="cf-photo-inner">{photoEl}</div>
+      </div>
+
+      <div className="cf-dept">{department}</div>
+
+      <div className="cf-leaves cf-left">❯❯❯</div>
+      <div className="cf-leaves cf-right">❮❮❮</div>
+
+      <div className="cf-bottom">
+        <p className="cf-welcome">WELCOME, FUTURE</p>
+        <h2 className="cf-name">{name}!</h2>
+        <div className="cf-divider">─── ✦ ───</div>
+        <p className="cf-quote">"{quote || 'Every great journey begins with a single step.'}"</p>
+        <div className="cf-fields">
+          <div className="cf-field"><span>Fun Fact:</span> {funFact}</div>
+          <div className="cf-field"><span>Dream Job:</span> {dreamJob}</div>
+        </div>
+        <span className="cf-motto">LEARN • GROW • EXCEL</span>
+        <div className="cf-qr">
+          {qr && <img src={qr} alt="QR" />}
+          <span>#{cardId}</span>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderers = {
+    futuristic: renderFuturistic,
+    dreamer: renderDreamer,
+    bold: renderBold,
+    classic: renderClassic
+  }
+
   return (
     <div>
-      <div id="card-element" className={`krct-card krct-card-${selectedStyle || 'default'}`}>
-        <div className="krct-card-glow" />
-
-        <div className="krct-card-header">
-          <img className="krct-logo" src={logo} alt="K.Ramakrishnan College of Technology" />
-          <span className="krct-card-id">#{cardId}</span>
-        </div>
-        <div className="krct-card-sub">K.Ramakrishnan College of Technology · Fresher Card 2026</div>
-
-        <div className="krct-card-divider" />
-
-        <div className="krct-photo-wrap">
-          {photo ? (
-            <img className="krct-photo" src={photo} alt={`${name}'s photo`} />
-          ) : (
-            <div className="krct-photo krct-photo-empty">No Photo</div>
-          )}
-        </div>
-
-        <h2 className="krct-name">{name}</h2>
-        <p className="krct-dept">{department}</p>
-
-        {quote && (
-          <div className="krct-quote">
-            <span className="krct-quote-mark">&ldquo;</span>
-            {quote}
-            <span className="krct-quote-mark">&rdquo;</span>
-          </div>
-        )}
-
-        <div className="krct-fields">
-          <div className="krct-field">
-            <div className="krct-field-label">Fun Fact</div>
-            <div className="krct-field-value">&ldquo;{funFact}&rdquo;</div>
-          </div>
-          <div className="krct-field">
-            <div className="krct-field-label">Dream Job</div>
-            <div className="krct-field-value krct-capitalize">{dreamJob}</div>
-          </div>
-        </div>
-
-        <div className="krct-footer">
-          <div className="krct-qr">
-            {qr && <img src={qr} alt="Scan to visit KRCT" />}
-            <span className="krct-qr-label">Scan me</span>
-          </div>
-          <div className="krct-footer-text">
-            <span className="krct-hashtag">{BRAND.hashtag}</span>
-            <span className="krct-tagline">{BRAND.tagline}</span>
-          </div>
-        </div>
-
-        <div className="krct-watermark">{BRAND.watermark}</div>
+      <div id="card-element" className={`style-card-final style-card-${selectedStyle || 'futuristic'}`}>
+        {(renderers[selectedStyle] || renderFuturistic)()}
       </div>
 
       <div className="card-actions">
