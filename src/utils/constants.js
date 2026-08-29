@@ -25,12 +25,14 @@ export const DEPARTMENTS = [
   'Electrical & Electronics Engineering',
   'Mechanical Engineering',
   'Civil Engineering',
-  'Sciences & Humanities'
+  'Sciences & Humanities',
+  'Computer Science and Business Systems'
 ]
 
-// Departments shown for each college. Edit these lists to reflect what each
-// college actually offers — the form filters the department dropdown by the
-// selected college.
+// Departments shown for each college, pulled from each college's website.
+// The form filters the department dropdown by the selected college.
+//   KRCT offers Civil Engineering; KRCE offers Computer Science and Business
+//   Systems instead (and no Civil).
 export const COLLEGE_DEPARTMENTS = {
   KRCT: [
     'Artificial Intelligence & Data Science',
@@ -51,8 +53,8 @@ export const COLLEGE_DEPARTMENTS = {
     'Electronics & Communication Engineering',
     'Electrical & Electronics Engineering',
     'Mechanical Engineering',
-    'Civil Engineering',
-    'Sciences & Humanities'
+    'Sciences & Humanities',
+    'Computer Science and Business Systems'
   ]
 }
 
