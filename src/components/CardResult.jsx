@@ -160,7 +160,9 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="cf-border" />
 
       <div className="cf-header">
-        <div className="cf-logo">{collegeBrand}</div>
+        <div className="cf-logo">
+          <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+        </div>
         <div>
           <strong>{collegeInfo.short}</strong>
           <span>{collegeInfo.name}</span>
