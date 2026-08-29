@@ -1147,8 +1147,9 @@ label {
 }
 
 .display-stage .style-card-final {
-  transform: scale(1.15);
-  transform-origin: center;
+  width: min(420px, 90vw);
+  max-height: 88vh;
+  transform: none;
 }
 
 .display-loading {
