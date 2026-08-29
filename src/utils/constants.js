@@ -28,6 +28,34 @@ export const DEPARTMENTS = [
   'Sciences & Humanities'
 ]
 
+// Departments shown for each college. Edit these lists to reflect what each
+// college actually offers — the form filters the department dropdown by the
+// selected college.
+export const COLLEGE_DEPARTMENTS = {
+  KRCT: [
+    'Artificial Intelligence & Data Science',
+    'CSE - Artificial Intelligence & Machine Learning',
+    'Computer Science & Engineering',
+    'Information Technology',
+    'Electronics & Communication Engineering',
+    'Electrical & Electronics Engineering',
+    'Mechanical Engineering',
+    'Civil Engineering',
+    'Sciences & Humanities'
+  ],
+  KRCE: [
+    'Artificial Intelligence & Data Science',
+    'CSE - Artificial Intelligence & Machine Learning',
+    'Computer Science & Engineering',
+    'Information Technology',
+    'Electronics & Communication Engineering',
+    'Electrical & Electronics Engineering',
+    'Mechanical Engineering',
+    'Civil Engineering',
+    'Sciences & Humanities'
+  ]
+}
+
 export const QUOTES = [
   'Where Ambition Meets Excellence.',
   'Dream big. Work hard. Shine bright.',

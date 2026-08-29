@@ -6,7 +6,7 @@ import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
-import { DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
+import { DEPARTMENTS, COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
 import logo from '../assets/logo.jpg'
 
@@ -37,7 +37,11 @@ function FormPage() {
   const cardRef = useRef(null)
 
   const updateField = useCallback((field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+      ...(field === 'college' ? { department: '' } : {})
+    }))
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
@@ -349,9 +353,12 @@ function FormPage() {
                 id="department"
                 value={formData.department}
                 onChange={e => updateField('department', e.target.value)}
+                disabled={!formData.college}
               >
-                <option value="">Choose your department</option>
-                {DEPARTMENTS.map(d => (
+                <option value="">
+                  {formData.college ? 'Choose your department' : 'Select a college first'}
+                </option>
+                {(COLLEGE_DEPARTMENTS[formData.college] || []).map(d => (
                   <option key={d} value={d}>{d}</option>
                 ))}
               </select>
