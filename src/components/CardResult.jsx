@@ -43,7 +43,6 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="sf-header">
         <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
         <div className="brand-text">
-          <span className="card-college-name">{collegeInfo.name}</span>
           <span className="brand-tagline">ENGINEERING THE FUTURE</span>
         </div>
       </div>
@@ -86,7 +85,6 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="df-header">
         <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
         <div className="brand-text">
-          <span className="card-college-name">{collegeInfo.name}</span>
           <span className="brand-tagline">DREAM • BELIEVE • ACHIEVE</span>
         </div>
       </div>
@@ -128,7 +126,6 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="bf-header">
         <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
         <div className="brand-text">
-          <span className="card-college-name">{collegeInfo.name}</span>
           <span className="brand-tagline">RISE. FOCUS. CONQUER.</span>
         </div>
       </div>
@@ -168,7 +165,6 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
         </div>
         <div>
           <strong>{collegeInfo.short}</strong>
-          <span>{collegeInfo.name}</span>
         </div>
       </div>
 
