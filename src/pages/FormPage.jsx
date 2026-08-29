@@ -8,7 +8,7 @@ import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
 import { DEPARTMENTS, COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
-import logo from '../assets/logo.jpg'
+import logo from '../assets/logo.svg'
 
 function FormPage() {
   const [step, setStep] = useState('form')
@@ -306,7 +306,7 @@ function FormPage() {
     <div className="container">
       <div className="page">
         <header className="header">
-          <img className="header-logo" src={logo} alt="KR Group Logo" />
+          <img className="header-logo" src={logo} alt="KR Logo" />
           <div className="logo">
             K. Ramakrishnan Group of Institutions
             <small>Autonomous • NAAC A+ • Anna University Affiliated</small>

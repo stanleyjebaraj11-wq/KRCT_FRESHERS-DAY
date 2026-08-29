@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useEffect, useState } from 'react'
 import QRCode from 'qrcode'
-import logo from '../assets/logo.jpg'
+import logo from '../assets/logo.svg'
 import { BRAND } from '../utils/brand'
 import { COLLEGES } from '../utils/constants'
 

@@ -225,6 +225,8 @@ label {
   max-width: 200px;
   object-fit: contain;
   margin-bottom: 14px;
+  /* The logo asset is black (for light/print use); invert so it's visible on the dark header */
+  filter: brightness(0) invert(1);
 }
 
 .logo {
