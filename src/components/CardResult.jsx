@@ -13,12 +13,6 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
   const [qr, setQr] = useState('')
 
   const collegeInfo = COLLEGES[college] || COLLEGES.KRCT
-  const collegeBrand = (
-    <>
-      <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
-      <span className="card-college-name">{collegeInfo.name}</span>
-    </>
-  )
 
   useEffect(() => {
     let active = true
@@ -47,8 +41,11 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="tech-corner bottom-right" />
 
       <div className="sf-header">
-        {collegeBrand}
-        <span>ENGINEERING THE FUTURE</span>
+        <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+        <div className="brand-text">
+          <span className="card-college-name">{collegeInfo.name}</span>
+          <span className="brand-tagline">ENGINEERING THE FUTURE</span>
+        </div>
       </div>
 
       <div className="sf-year">2026</div>
@@ -87,8 +84,11 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="df-moon">☾</div>
 
       <div className="df-header">
-        {collegeBrand}
-        <span>DREAM • BELIEVE • ACHIEVE</span>
+        <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+        <div className="brand-text">
+          <span className="card-college-name">{collegeInfo.name}</span>
+          <span className="brand-tagline">DREAM • BELIEVE • ACHIEVE</span>
+        </div>
       </div>
 
       <div className="df-photo-ring">
@@ -126,8 +126,11 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="bf-slash bf-slash-two" />
 
       <div className="bf-header">
-        {collegeBrand}
-        <span>RISE. FOCUS. CONQUER.</span>
+        <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+        <div className="brand-text">
+          <span className="card-college-name">{collegeInfo.name}</span>
+          <span className="brand-tagline">RISE. FOCUS. CONQUER.</span>
+        </div>
       </div>
 
       <div className="bf-bg-text">RISE<br />FOCUS<br />CONQUER</div>
