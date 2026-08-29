@@ -352,7 +352,7 @@ function FormPage() {
               >
                 <option value="">Choose your department</option>
                 {DEPARTMENTS.map(d => (
-                  <option key={d.value} value={d.value}>{d.value}</option>
+                  <option key={d} value={d}>{d}</option>
                 ))}
               </select>
               {errors.department && <div className="field-error">{errors.department}</div>}
