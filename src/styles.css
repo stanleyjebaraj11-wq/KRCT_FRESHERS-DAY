@@ -992,6 +992,16 @@ label {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.card-college-name {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-transform: uppercase;
+  max-width: 150px;
+  line-height: 1.15;
+}
+
 /* ===== LIVE SLIDESHOW MONITOR (/display) ===== */
 .display-page {
   min-height: 100vh;

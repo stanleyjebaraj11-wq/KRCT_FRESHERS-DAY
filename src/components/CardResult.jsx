@@ -14,7 +14,10 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
 
   const collegeInfo = COLLEGES[college] || COLLEGES.KRCT
   const collegeBrand = (
-    <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+    <>
+      <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+      <span className="card-college-name">{collegeInfo.name}</span>
+    </>
   )
 
   useEffect(() => {
@@ -159,9 +162,8 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="cf-header">
         <div className="cf-logo">{collegeBrand}</div>
         <div>
-          {collegeBrand}
-          <span>GROUP OF</span>
-          <small>INSTITUTIONS</small>
+          <strong>{collegeInfo.short}</strong>
+          <span>{collegeInfo.name}</span>
         </div>
       </div>
 
