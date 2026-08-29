@@ -8,7 +8,7 @@ function StyleSelector({ onContinue, onBack, studentData }) {
     onContinue(selectedStyle)
   }
 
-  const studentName = studentData?.name || 'KRCTian'
+  const studentName = studentData?.name || 'KR Groupian'
   const photo = studentData?.photo
 
   return (
@@ -26,7 +26,7 @@ function StyleSelector({ onContinue, onBack, studentData }) {
         <div className="style-header">
           <p className="style-step">STEP 03 OF 04</p>
           <h1>Choose your <span>vibe.</span></h1>
-          <p>Pick the style that feels most like you.<br />We'll use it to create your personalized KRCT story.</p>
+          <p>Pick the style that feels most like you.<br />We'll use it to create your personalized KR Group story.</p>
         </div>
 
         <div className="style-grid">
@@ -40,7 +40,7 @@ function StyleSelector({ onContinue, onBack, studentData }) {
               <div className="tech-corner top-right" />
               <div className="tech-corner bottom-left" />
               <div className="tech-corner bottom-right" />
-              <div className="preview-brand"><strong>KRCT</strong><span>ENGINEERING THE FUTURE</span></div>
+              <div className="preview-brand"><strong>KR Group</strong><span>ENGINEERING THE FUTURE</span></div>
               <div className="future-year">2026</div>
               <div className="hud-circle">
                 <div className="hud-ring">
@@ -69,7 +69,7 @@ function StyleSelector({ onContinue, onBack, studentData }) {
             <div className="story-preview dreamer-preview">
               <div className="stars">✦ · ✧ · ★</div>
               <div className="moon">☾</div>
-              <div className="dream-brand"><strong>KRCT</strong><span>DREAM • BELIEVE • ACHIEVE</span></div>
+              <div className="dream-brand"><strong>KR Group</strong><span>DREAM • BELIEVE • ACHIEVE</span></div>
               <div className="dream-photo-frame">
                 <div className="student-photo">
                   {photo ? <img src={photo} alt={studentName} /> : <span>YOUR PHOTO</span>}
@@ -97,7 +97,7 @@ function StyleSelector({ onContinue, onBack, studentData }) {
               <div className="bold-dots" />
               <div className="red-slash slash-one" />
               <div className="red-slash slash-two" />
-              <div className="bold-brand"><strong>KRCT</strong><span>RISE. FOCUS. CONQUER.</span></div>
+              <div className="bold-brand"><strong>KR Group</strong><span>RISE. FOCUS. CONQUER.</span></div>
               <div className="background-bold-text">RISE<br />FOCUS<br />CONQUER</div>
               <div className="bold-photo-frame">
                 <div className="student-photo">
@@ -124,7 +124,7 @@ function StyleSelector({ onContinue, onBack, studentData }) {
               <div className="classic-border" />
               <div className="classic-brand">
                 <div className="classic-logo">🎓</div>
-                <div><strong>KRCT</strong><span>COLLEGE OF ENGINEERING</span><small>AND TECHNOLOGY</small></div>
+                <div><strong>KR Group</strong><span>GROUP OF</span><small>INSTITUTIONS</small></div>
               </div>
               <div className="classic-line">───── ✦ ─────</div>
               <div className="classic-photo-frame">
@@ -143,14 +143,14 @@ function StyleSelector({ onContinue, onBack, studentData }) {
               </div>
             </div>
             <div className="style-card-info">
-              <div><h3>🎓 Classic KRCT</h3><p>Clean. Premium. Timeless.</p></div>
+              <div><h3>🎓 Classic KR Group</h3><p>Clean. Premium. Timeless.</p></div>
               <div className="selection-circle">{selectedStyle === 'classic' && '✓'}</div>
             </div>
           </button>
         </div>
 
         <button type="button" className="generate-story-button" onClick={handleContinue}>
-          <span>Generate My KRCT Story</span>
+          <span>Generate My KR Group Story</span>
           <span className="generate-sparkle">✦</span>
         </button>
 

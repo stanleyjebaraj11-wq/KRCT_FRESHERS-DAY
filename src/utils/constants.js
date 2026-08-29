@@ -1,3 +1,21 @@
+import krctLogo from '../assets/krct-logo.png'
+import krceLogo from '../assets/krce-logo.png'
+
+export const COLLEGES = {
+  KRCT: {
+    id: 'KRCT',
+    name: 'K. Ramakrishnan College of Technology',
+    short: 'KRCT',
+    logo: krctLogo
+  },
+  KRCE: {
+    id: 'KRCE',
+    name: 'K. Ramakrishnan College of Engineering',
+    short: 'KRCE',
+    logo: krceLogo
+  }
+}
+
 export const DEPARTMENTS = [
   'Artificial Intelligence & Data Science',
   'CSE - Artificial Intelligence & Machine Learning',

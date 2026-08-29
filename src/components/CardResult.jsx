@@ -1,15 +1,21 @@
 import { forwardRef, useImperativeHandle, useEffect, useState } from 'react'
 import QRCode from 'qrcode'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.jpg'
 import { BRAND } from '../utils/brand'
+import { COLLEGES } from '../utils/constants'
 
-const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onInstagramStory, onMakeAnother }, ref) => {
+const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onInstagramStory, onMakeAnother, hideActions }, ref) => {
   useImperativeHandle(ref, () => ({
     getElement: () => document.getElementById('card-element')
   }))
 
-  const { cardId, name, department, funFact, dreamJob, photo, quote, selectedStyle } = data
+  const { cardId, name, department, college, funFact, dreamJob, photo, quote, selectedStyle } = data
   const [qr, setQr] = useState('')
+
+  const collegeInfo = COLLEGES[college] || COLLEGES.KRCT
+  const collegeBrand = (
+    <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
+  )
 
   useEffect(() => {
     let active = true
@@ -38,7 +44,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="tech-corner bottom-right" />
 
       <div className="sf-header">
-        <strong>KRCT</strong>
+        {collegeBrand}
         <span>ENGINEERING THE FUTURE</span>
       </div>
 
@@ -78,7 +84,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="df-moon">☾</div>
 
       <div className="df-header">
-        <strong>KRCT</strong>
+        {collegeBrand}
         <span>DREAM • BELIEVE • ACHIEVE</span>
       </div>
 
@@ -117,7 +123,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="bf-slash bf-slash-two" />
 
       <div className="bf-header">
-        <strong>KRCT</strong>
+        {collegeBrand}
         <span>RISE. FOCUS. CONQUER.</span>
       </div>
 
@@ -151,11 +157,11 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
       <div className="cf-border" />
 
       <div className="cf-header">
-        <div className="cf-logo">🎓</div>
+        <div className="cf-logo">{collegeBrand}</div>
         <div>
-          <strong>KRCT</strong>
-          <span>COLLEGE OF ENGINEERING</span>
-          <small>AND TECHNOLOGY</small>
+          {collegeBrand}
+          <span>GROUP OF</span>
+          <small>INSTITUTIONS</small>
         </div>
       </div>
 
@@ -201,7 +207,7 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
         {(renderers[selectedStyle] || renderFuturistic)()}
       </div>
 
-      <div className="card-actions">
+      <div className="card-actions" style={hideActions ? { display: 'none' } : undefined}>
         <div className="card-actions-row">
           <button type="button" className="btn btn-gold" onClick={onDownload}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>

@@ -4,9 +4,12 @@ create table fresher_entries (
   id uuid primary key default gen_random_uuid(),
   card_id text unique not null,
   name text not null,
+  college text not null default 'KRCT',
   department text not null,
   fun_fact text not null,
   dream_job text not null,
+  photo text,
+  style text not null default 'futuristic',
   made_in_seconds numeric,
   consent_given boolean not null default false,
   created_at timestamptz not null default now()

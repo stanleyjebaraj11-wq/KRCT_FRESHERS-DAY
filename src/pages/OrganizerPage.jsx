@@ -60,7 +60,7 @@ function OrganizerPage() {
         <div className="page" style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '70vh' }}>
           <div className="header">
             <div className="logo">
-              K.Ramakrishnan College of Technology
+              K. Ramakrishnan Group of Institutions
               <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
               <span>ORGANIZER PORTAL</span>
             </div>
@@ -107,7 +107,7 @@ function OrganizerPage() {
       <div className="page">
         <div className="header">
           <div className="logo">
-            K.Ramakrishnan College of Technology
+            K. Ramakrishnan Group of Institutions
             <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
             <span>ENTRIES</span>
           </div>

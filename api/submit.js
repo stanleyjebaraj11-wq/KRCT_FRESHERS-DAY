@@ -19,7 +19,7 @@ function checkRateLimit(ip) {
 
 function generateCardId() {
   const num = Math.floor(Math.random() * 90000) + 10000
-  return `KRCT2026-${num}`
+  return `KRGRP2026-${num}`
 }
 
 export default async function handler(req, res) {
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests, please wait a moment' })
   }
 
-  const { name, department, funFact, dreamJob, madeInSeconds, consentGiven } = req.body
+  const { name, college, department, funFact, dreamJob, photo, style, madeInSeconds, consentGiven } = req.body
 
   if (!name?.trim() || !department?.trim() || !funFact?.trim() || !dreamJob?.trim()) {
     return res.status(400).json({ error: 'All fields are required' })
@@ -51,12 +51,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Dream job must be one word, 20 characters or less' })
   }
 
+  // Store the photo as a data URL (used by the live slideshow monitor).
+  if (photo && (!photo.startsWith('data:image/') || photo.length > 3_000_000)) {
+    return res.status(400).json({ error: 'Photo is too large or invalid' })
+  }
+
+  const safeCollege = college === 'KRCE' ? 'KRCE' : 'KRCT'
+  const safeStyle = ['futuristic', 'dreamer', 'bold', 'classic'].includes(style) ? style : 'futuristic'
+
   try {
     const cardId = generateCardId()
 
     await sql`
-      INSERT INTO fresher_entries (card_id, name, department, fun_fact, dream_job, made_in_seconds, consent_given)
-      VALUES (${cardId}, ${name.trim()}, ${department.trim()}, ${funFact.trim()}, ${dreamJob.trim()}, ${madeInSeconds}, ${consentGiven})
+      INSERT INTO fresher_entries (card_id, name, college, department, fun_fact, dream_job, photo, style, made_in_seconds, consent_given)
+      VALUES (${cardId}, ${name.trim()}, ${safeCollege}, ${department.trim()}, ${funFact.trim()}, ${dreamJob.trim()}, ${photo || null}, ${safeStyle}, ${madeInSeconds}, ${consentGiven})
     `
 
     return res.status(200).json({ cardId, madeInSeconds })

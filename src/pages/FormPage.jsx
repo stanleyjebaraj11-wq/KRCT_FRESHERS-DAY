@@ -6,14 +6,15 @@ import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
-import { DEPARTMENTS, getRandomQuote } from '../utils/constants'
+import { DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.jpg'
 
 function FormPage() {
   const [step, setStep] = useState('form')
   const [formData, setFormData] = useState({
     name: '',
+    college: '',
     department: '',
     funFact: '',
     dreamJob: '',
@@ -48,6 +49,7 @@ function FormPage() {
   const validateForm = useCallback(() => {
     const newErrors = {}
     if (!formData.name.trim()) newErrors.name = 'Name is required'
+    if (!formData.college) newErrors.college = 'College is required'
     if (!formData.department) newErrors.department = 'Department is required'
     if (!formData.funFact.trim()) newErrors.funFact = 'Fun fact is required'
     if (formData.funFact.length > 50) newErrors.funFact = 'Fun fact must be 50 characters or less'
@@ -64,16 +66,42 @@ function FormPage() {
     setStep('photo')
   }, [validateForm])
 
+  const compressPhoto = useCallback((dataUrl, maxDim = 600, quality = 0.7) => {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        const scale = Math.min(1, maxDim / Math.max(img.width, img.height))
+        const w = Math.max(1, Math.round(img.width * scale))
+        const h = Math.max(1, Math.round(img.height * scale))
+        const canvas = document.createElement('canvas')
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, w, h)
+        resolve(canvas.toDataURL('image/jpeg', quality))
+      }
+      img.onerror = () => resolve(dataUrl)
+      img.src = dataUrl
+    })
+  }, [])
+
   const submitCard = useCallback(async (photoDataUrl) => {
     if (!photoDataUrl) return
+
+    // Compress a small copy for the DB slideshow (full-res stays local for
+    // download/share). Keeps ~1000 cards well under Neon's 0.5 GB free limit.
+    const compressedPhoto = await compressPhoto(photoDataUrl, 600, 0.7)
 
     setIsSubmitting(true)
     try {
       const result = await submitForm({
         name: formData.name.trim(),
+        college: formData.college,
         department: formData.department,
         funFact: formData.funFact.trim(),
         dreamJob: formData.dreamJob.trim(),
+        photo: compressedPhoto,
+        style: selectedStyle || 'futuristic',
         madeInSeconds: timer.current,
         consentGiven: formData.consent
       })
@@ -97,7 +125,7 @@ function FormPage() {
 
   const handleMakeAnother = useCallback(() => {
     setStep('form')
-    setFormData({ name: '', department: '', funFact: '', dreamJob: '', consent: false })
+    setFormData({ name: '', college: '', department: '', funFact: '', dreamJob: '', consent: false })
     setPhoto(null)
     setCardId(null)
     setMadeInSeconds(null)
@@ -150,7 +178,7 @@ function FormPage() {
       }
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
-      link.download = `KRCT-Fresher-Card-${cardId}.png`
+      link.download = `KR-Group-Fresher-Card-${cardId}.png`
       link.href = url
       document.body.appendChild(link)
       link.click()
@@ -167,8 +195,8 @@ function FormPage() {
     try {
       const blob = await getCardBlob()
       if (!blob) return
-      const file = new File([blob], `KRCT-Fresher-Card-${cardId}.png`, { type: 'image/png' })
-      const shareData = { title: 'My KRCT Fresher Card', text: BRAND.shareText }
+      const file = new File([blob], `KR-Group-Fresher-Card-${cardId}.png`, { type: 'image/png' })
+      const shareData = { title: 'My KR Group Fresher Card', text: BRAND.shareText }
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({ ...shareData, files: [file] })
@@ -188,7 +216,7 @@ function FormPage() {
         if (blob) {
           const url = URL.createObjectURL(blob)
           const link = document.createElement('a')
-          link.download = `KRCT-Fresher-Card-${cardId}.png`
+          link.download = `KR-Group-Fresher-Card-${cardId}.png`
           link.href = url
           link.click()
           URL.revokeObjectURL(url)
@@ -207,7 +235,7 @@ function FormPage() {
   }, [])
 
   const handleCopyCaption = useCallback(async () => {
-    const caption = `Just got my KRCT Fresher Card! 🎓\n\n${formData.name} | ${formData.department}\n"${formData.funFact}"\nDream job: ${formData.dreamJob}\n\n#KRCT2026 #FreshersDay #WhereAmbitionMeetsExcellence`
+    const caption = `Just got my KR Group Fresher Card! 🎓\n\n${formData.name} | ${formData.department}\n"${formData.funFact}"\nDream job: ${formData.dreamJob}\n\n#KRGroup2026 #FreshersDay #WhereAmbitionMeetsExcellence`
     try {
       await navigator.clipboard.writeText(caption)
       showToast('Caption copied!', 'success')
@@ -226,15 +254,15 @@ function FormPage() {
         showToast('Could not generate card image', 'error')
         return
       }
-      const file = new File([blob], `KRCT-Fresher-Card-${cardId}.png`, { type: 'image/png' })
+      const file = new File([blob], `KR-Group-Fresher-Card-${cardId}.png`, { type: 'image/png' })
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ title: 'My KRCT Fresher Card', files: [file] })
+        await navigator.share({ title: 'My KR Group Fresher Card', files: [file] })
         showToast('Shared! Select Instagram from the share menu.', 'success')
         return
       }
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
-      link.download = `KRCT-Fresher-Card-${cardId}.png`
+      link.download = `KR-Group-Fresher-Card-${cardId}.png`
       link.href = url
       document.body.appendChild(link)
       link.click()
@@ -264,6 +292,7 @@ function FormPage() {
   }, [stream])
 
   const isFormComplete = formData.name.trim() &&
+    formData.college &&
     formData.department &&
     formData.funFact.trim() &&
     formData.dreamJob.trim() &&
@@ -273,9 +302,9 @@ function FormPage() {
     <div className="container">
       <div className="page">
         <header className="header">
-          <img className="header-logo" src={logo} alt="KRCT Logo" />
+          <img className="header-logo" src={logo} alt="KR Group Logo" />
           <div className="logo">
-            K.Ramakrishnan College of Technology
+            K. Ramakrishnan Group of Institutions
             <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
             <span>FRESHER CARD</span>
           </div>
@@ -300,6 +329,21 @@ function FormPage() {
             </div>
 
             <div className="field-group">
+              <label htmlFor="college">College *</label>
+              <select
+                id="college"
+                value={formData.college}
+                onChange={e => updateField('college', e.target.value)}
+              >
+                <option value="">Choose your college</option>
+                {Object.values(COLLEGES).map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              {errors.college && <div className="field-error">{errors.college}</div>}
+            </div>
+
+            <div className="field-group">
               <label htmlFor="department">Department *</label>
               <select
                 id="department"
@@ -308,7 +352,7 @@ function FormPage() {
               >
                 <option value="">Choose your department</option>
                 {DEPARTMENTS.map(d => (
-                  <option key={d} value={d}>{d}</option>
+                  <option key={d.value} value={d.value}>{d.value}</option>
                 ))}
               </select>
               {errors.department && <div className="field-error">{errors.department}</div>}
@@ -359,7 +403,7 @@ function FormPage() {
                   required
                 />
                 <span>
-                  I agree KRCT can use my photo and details for this event and official social media.
+                  I agree KR Group can use my photo and details for this event and official social media.
                 </span>
               </label>
               {errors.consent && <div className="field-error">{errors.consent}</div>}
@@ -514,6 +558,7 @@ function FormPage() {
               cardId,
               name: formData.name,
               department: formData.department,
+              college: formData.college,
               funFact: formData.funFact,
               dreamJob: formData.dreamJob,
               photo,
