@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import CardResult from '../components/CardResult'
 import { fetchDisplay } from '../utils/api'
-import { getRandomQuote } from '../utils/constants'
+import { getQuoteFor } from '../utils/constants'
 
 const ROTATE_MS = 6000
 const REFRESH_MS = 8000
@@ -149,7 +149,7 @@ function DisplayPage() {
                 department: current.department,
                 college: current.college,
                 photo: current.photo,
-                quote: getRandomQuote(),
+                quote: current.quote || getQuoteFor(current.name),
                 selectedStyle: current.style
               }}
             />

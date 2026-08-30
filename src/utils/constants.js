@@ -79,3 +79,20 @@ export const QUOTES = [
 export function getRandomQuote() {
   return QUOTES[Math.floor(Math.random() * QUOTES.length)]
 }
+
+function hashString(str) {
+  let h = 0
+  for (let i = 0; i < str.length; i++) {
+    h = (h << 5) - h + str.charCodeAt(i)
+    h |= 0
+  }
+  return Math.abs(h)
+}
+
+// Deterministic quote per student: the same name always maps to the same quote,
+// so the stored card and the live display slideshow never disagree.
+export function getQuoteFor(name) {
+  const key = String(name || '').trim().toLowerCase()
+  if (!key) return getRandomQuote()
+  return QUOTES[hashString(key) % QUOTES.length]
+}

@@ -1034,7 +1034,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 24px;
+  padding: 16px 24px;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -1066,12 +1066,13 @@ label {
 /* ---- Photo + identity ---- */
 .krct-identity {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 20px 24px 0;
+  padding: 16px 24px 0;
 }
 
 .krct-photo {
@@ -1108,10 +1109,15 @@ label {
 
 .krct-name {
   margin: 0 0 4px;
-  font-size: 38px;
+  font-size: 26px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.2;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  letter-spacing: -0.01em;
 }
 
 .krct-dept {
@@ -1129,7 +1135,7 @@ label {
   align-items: center;
   text-align: center;
   gap: 10px;
-  margin: 26px 24px 30px;
+  margin: 20px 24px 26px;
 }
 
 .krct-quote-icon {
@@ -1151,7 +1157,7 @@ label {
 /* ---- Footer row: hashtag left, card id right ---- */
 .krct-footer {
   margin-top: auto;
-  padding: 0 24px 26px;
+  padding: 0 24px 13%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1275,8 +1281,8 @@ label {
 }
 
 .display-stage .style-card-final {
-  width: min(420px, 90vw);
-  max-height: 88vh;
+  width: min(420px, 90vw, calc((100dvh - 190px) * 9 / 16));
+  max-height: none;
   transform: none;
 }
 
@@ -1344,11 +1350,17 @@ label {
   animation: newPulse 1.6s ease-in-out infinite;
 }
 
-.btn-sticky {
+.btn-sticky-wrap {
   position: sticky;
   bottom: 0;
   z-index: 5;
-  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.35);
+  padding: 18px 0 8px;
+  margin-top: 6px;
+  background: linear-gradient(180deg, rgba(10, 17, 40, 0) 0%, var(--bg) 38%);
+}
+
+.btn-sticky-wrap .btn-sticky {
+  box-shadow: var(--shadow-sm);
 }
 
 .photo-viewer {
@@ -1419,8 +1431,7 @@ label {
   50% { transform: scale(1.12); }
 }
 
-.btn-sticky {
-    position: sticky;
+.btn-sticky-wrap {
     bottom: 8px;
   }
 }

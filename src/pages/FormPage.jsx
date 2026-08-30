@@ -8,7 +8,7 @@ import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm, updateCardStyle } from '../utils/api'
-import { COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
+import { COLLEGE_DEPARTMENTS, COLLEGES, getQuoteFor } from '../utils/constants'
 import { BRAND } from '../utils/brand'
 import logo from '../assets/logo.png'
 
@@ -128,7 +128,7 @@ function FormPage() {
       setPhoto(photoDataUrl)
       setCardId(result.cardId)
       setMadeInSeconds(result.madeInSeconds)
-      setQuote(getRandomQuote())
+      setQuote(getQuoteFor(formData.name))
       setStep('style')
     } catch (err) {
       showToast(err.message || 'Failed to generate card', 'error')
@@ -194,9 +194,11 @@ function FormPage() {
       return null
     }
     try {
+      // Always export at least 1080px wide (sharp full-bleed on story/status).
+      const ratio = el.offsetWidth > 0 ? Math.max(2, 1080 / el.offsetWidth) : 2
       const dataUrl = await toPng(el, {
         backgroundColor: '#0a1128',
-        pixelRatio: 2,
+        pixelRatio: ratio,
         quality: 0.95,
         skipAutoScale: true,
         cacheBust: true,
@@ -454,6 +456,7 @@ function FormPage() {
               {errors.consent && <div className="field-error">{errors.consent}</div>}
             </div>
 
+            <div className="btn-sticky-wrap">
             <button
               type="button"
               className="btn btn-primary btn-sticky"
@@ -476,6 +479,7 @@ function FormPage() {
                 .spinner { animation: spin 1s linear infinite; }
               `}</style>
             </button>
+          </div>
           </form>
         )}
 
