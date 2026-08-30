@@ -1,6 +1,8 @@
 const OUT_W = 1350
 const OUT_H = 2400
 
+const F = 3.31 // design px (408-wide card) -> 1350 export scale
+
 const THEMES = {
   'futuristic-final': {
     accent: '#67dcff',
@@ -23,6 +25,8 @@ const THEMES = {
     chip: ['#0b2240', '#123a5e']
   }
 }
+
+const SIDE = 76 // card side padding (23px design * 3.31)
 
 function hexRgb(hex) {
   const h = hex.replace('#', '')
@@ -171,208 +175,164 @@ function wrapText(ctx, text, maxWidth) {
 export async function renderCardToBlob(cardEl) {
   if (!cardEl) return null
   if (document.fonts?.ready) await document.fonts.ready
+  await new Promise(r => setTimeout(r, 150))
 
-  // Lay out a real copy at export size so we can read every element's geometry.
-  const clone = cardEl.cloneNode(true)
-  clone.removeAttribute('id')
-  clone.style.cssText =
-    'width:1350px;height:auto;margin:0;position:static;touch-action:auto;'
-
-  const holder = document.createElement('div')
-  holder.style.cssText =
-    'position:fixed;left:-20000px;top:0;width:1350px;z-index:-9999;pointer-events:none;'
-  holder.appendChild(clone)
-  document.body.appendChild(holder)
-
-  try {
-    await new Promise(r => setTimeout(r, 120))
-    await Promise.all(
-      Array.from(clone.querySelectorAll('img')).map(img =>
-        img.decode ? img.decode().catch(() => {}) : Promise.resolve()
-      )
+  Promise.all(
+    Array.from(cardEl.querySelectorAll('img')).map(img =>
+      img.decode ? img.decode().catch(() => {}) : Promise.resolve()
     )
+  ).catch(() => {})
 
-    const base = holder.getBoundingClientRect()
-    const scale = OUT_W / (clone.getBoundingClientRect().width || OUT_W)
+  const themeKey = Array.from(cardEl.classList).find(c => THEMES[c]) || 'futuristic-final'
+  const theme = THEMES[themeKey]
+  const styleHex = getComputedStyle(cardEl).getPropertyValue('--krct-accent').trim()
+  const accent = /^#[0-9a-fA-F]{6}$/.test(styleHex) ? styleHex : theme.accent
 
-    const qrect = (sel) => {
-      const el = clone.querySelector(sel)
-      if (!el) return null
-      const r = el.getBoundingClientRect()
-      return {
-        x: (r.left - base.left) * scale,
-        y: (r.top - base.top) * scale,
-        w: r.width * scale,
-        h: r.height * scale
-      }
-    }
+  const text = (sel) => (cardEl.querySelector(sel)?.textContent || '').trim()
+  const lite = cardEl.querySelector('.krct-brand')?.classList.contains('krct-brand-lite')
 
-    const themeKey = Array.from(cardEl.classList).find(c => THEMES[c]) || 'futuristic-final'
-    const theme = THEMES[themeKey]
-    const accentHex = theme.accent
-    const styleHex = getComputedStyle(cardEl).getPropertyValue('--krct-accent').trim()
-    const accent = /^#[0-9a-fA-F]{6}$/.test(styleHex) ? styleHex : accentHex
+  const canvas = document.createElement('canvas')
+  canvas.width = OUT_W
+  canvas.height = OUT_H
+  const ctx = canvas.getContext('2d')
 
-    const canvas = document.createElement('canvas')
-    canvas.width = OUT_W
-    canvas.height = OUT_H
-    const ctx = canvas.getContext('2d')
+  const family = getComputedStyle(cardEl.querySelector('.krct-name') || cardEl).fontFamily
 
-    paintBackground(ctx, theme.bgType)
-    paintDecorations(ctx, theme.bgType, accent)
+  paintBackground(ctx, theme.bgType)
+  paintDecorations(ctx, theme.bgType, accent)
 
-    // ---- Header logo chip ----
-    const brandRect = qrect('.krct-brand')
-    if (brandRect) {
-      const lite = clone.querySelector('.krct-brand')?.classList.contains('krct-brand-lite')
-      ctx.save()
-      roundedRect(ctx, brandRect.x, brandRect.y, brandRect.w, brandRect.h, 40)
-      if (lite) {
-        const g = ctx.createLinearGradient(brandRect.x, brandRect.y, brandRect.x, brandRect.y + brandRect.h)
-        g.addColorStop(0, '#ffffff')
-        g.addColorStop(1, '#dfe7f3')
-        ctx.fillStyle = g
-      } else {
-        const g = ctx.createLinearGradient(brandRect.x, brandRect.y, brandRect.x + brandRect.w, brandRect.y + brandRect.h)
-        g.addColorStop(0, theme.chip[0])
-        g.addColorStop(1, theme.chip[1])
-        ctx.fillStyle = g
-      }
-      ctx.fill()
-      ctx.restore()
-      const logoImg = clone.querySelector('.krct-brand')
-      if (logoImg) {
-        try {
-          const img = await loadImg(logoImg.src)
-          const pad = Math.round(brandRect.w * 0.04)
-          const destW = brandRect.w - pad * 2
-          const destH = brandRect.h - pad * 2
-          const ir = Math.min(destW / img.width, destH / img.height)
-          const dw = img.width * ir
-          const dh = img.height * ir
-          ctx.drawImage(img, brandRect.x + (brandRect.w - dw) / 2, brandRect.y + (brandRect.h - dh) / 2, dw, dh)
-        } catch (e) {
-          console.warn('Logo draw failed', e)
-        }
-      }
-    }
+  const cx = OUT_W / 2
+  const divW = OUT_W - SIDE * 2
 
-    // ---- Photo (circle) ----
-    const photoRect = qrect('.krct-photo')
-    const photoImg = clone.querySelector('.krct-photo-img')
-    if (photoRect && photoImg) {
-      try {
-        const img = await loadImg(photoImg.src)
-        const cx = photoRect.x + photoRect.w / 2
-        const cy = photoRect.y + photoRect.h / 2
-        const r = Math.min(photoRect.w, photoRect.h) / 2
-        const side = r * 2
-        ctx.save()
-        ctx.beginPath()
-        ctx.arc(cx, cy, r, 0, Math.PI * 2)
-        ctx.clip()
-        const s = Math.max(side / img.width, side / img.height)
-        const dw = img.width * s
-        const dh = img.height * s
-        ctx.drawImage(img, cx - dw / 2, cy - dh / 2, dw, dh)
-        ctx.restore()
-      } catch (e) {
-        console.warn('Photo draw failed', e)
-      }
-    }
-
-    // ---- Text block ----
-    const drawCenter = (rect, text, font, color, letterSpacing, maxW) => {
-      if (!rect || !text) return
-      ctx.save()
-      ctx.font = font
-      ctx.fillStyle = color
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      if (typeof ctx.letterSpacing === 'string') ctx.letterSpacing = letterSpacing || '0px'
-      if (maxW) {
-        let t = text
-        while (t.length > 1 && ctx.measureText(t).width > maxW) t = t.slice(0, -1)
-        if (t !== text) text = t + '…'
-      }
-      ctx.fillText(text, rect.x + rect.w / 2, rect.y + rect.h / 2)
-      ctx.restore()
-    }
-
-    const family = getComputedStyle(clone.querySelector('.krct-name') || cardEl).fontFamily
-
-    const eyebrow = qrect('.krct-eyebrow')
-    drawCenter(eyebrow, clone.querySelector('.krct-eyebrow')?.textContent, `500 ${Math.round(eyebrow.h * 0.85)}px ${family}`, accent, '1px')
-
-    const nameRect = qrect('.krct-name')
-    drawCenter(nameRect, clone.querySelector('.krct-name')?.textContent, `600 ${Math.round(nameRect.h * 0.85)}px ${family}`, '#ffffff', '0px', nameRect.w * 0.98)
-
-    const deptRect = qrect('.krct-dept')
-    drawCenter(deptRect, (clone.querySelector('.krct-dept')?.textContent || '').toUpperCase(), `500 ${Math.round(deptRect.h * 0.75)}px ${family}`, '#8b95a6', '1px')
-
-    const quoteRect = qrect('.krct-quote-text')
-    if (quoteRect) {
-      const iconRect = qrect('.krct-quote-icon')
-      if (iconRect) {
-        ctx.save()
-        ctx.font = `${Math.round(iconRect.h * 0.9)}px ${family}`
-        ctx.fillStyle = accent
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText('❞', iconRect.x + iconRect.w / 2, iconRect.y + iconRect.h / 2)
-        ctx.restore()
-      }
-      const q = clone.querySelector('.krct-quote-text')?.textContent
-      ctx.save()
-      ctx.font = `italic 500 ${Math.round(quoteRect.h * 0.9)}px ${family}`
-      ctx.fillStyle = 'rgba(255,255,255,0.85)'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'top'
-      const lines = wrapText(ctx, q, quoteRect.w)
-      const lh = Math.round(quoteRect.h * 0.9 * 1.6)
-      const startY = quoteRect.y + quoteRect.h / 2 - ((lines.length - 1) * lh) / 2
-      lines.forEach((line, i) => {
-        ctx.fillText(line, quoteRect.x + quoteRect.w / 2, startY + i * lh)
-      })
-      ctx.restore()
-    }
-
-    // ---- Footer ----
-    const footerRect = qrect('.krct-footer-row')
-    if (footerRect) {
-      ctx.save()
-      ctx.strokeStyle = 'rgba(255,255,255,0.18)'
-      ctx.lineWidth = 1.5
-      ctx.beginPath()
-      ctx.moveTo(footerRect.x, footerRect.y)
-      ctx.lineTo(footerRect.x + footerRect.w, footerRect.y)
-      ctx.stroke()
-      ctx.restore()
-
-      const hashtagRect = qrect('.krct-hashtag')
-      drawCenter(hashtagRect, clone.querySelector('.krct-hashtag')?.textContent, `600 ${Math.round(hashtagRect.h * 0.9)}px ${family}`, 'rgba(255,255,255,0.7)', '1px')
-
-      const pillRect = qrect('.krct-card-id')
-      if (pillRect) {
-        ctx.save()
-        roundedRect(ctx, pillRect.x, pillRect.y, pillRect.w, pillRect.h, pillRect.h / 2)
-        ctx.fillStyle = rgba(accent, 0.14)
-        ctx.fill()
-        ctx.strokeStyle = rgba(accent, 0.35)
-        ctx.lineWidth = 2
-        ctx.stroke()
-        ctx.restore()
-        drawCenter(pillRect, clone.querySelector('.krct-card-id')?.textContent, `600 ${Math.round(pillRect.h * 0.55)}px ${family}`, accent)
-      }
-    }
-
-    return await new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) resolve(blob)
-        else reject(new Error('Canvas export failed'))
-      }, 'image/png')
-    })
-  } finally {
-    holder.remove()
+  // ---- Header logo chip ----
+  const chipY = 46
+  const chipH = 232
+  ctx.save()
+  roundedRect(ctx, SIDE, chipY, divW, chipH, 46)
+  if (lite) {
+    const g = ctx.createLinearGradient(SIDE, chipY, SIDE, chipY + chipH)
+    g.addColorStop(0, '#ffffff')
+    g.addColorStop(1, '#dfe7f3')
+    ctx.fillStyle = g
+  } else {
+    const g = ctx.createLinearGradient(SIDE, chipY, SIDE + divW, chipY + chipH)
+    g.addColorStop(0, theme.chip[0])
+    g.addColorStop(1, theme.chip[1])
+    ctx.fillStyle = g
   }
+  ctx.fill()
+  ctx.restore()
+  try {
+    const img = await loadImg(cardEl.querySelector('.krct-brand').src)
+    const pad = Math.round(divW * 0.04)
+    const destW = divW - pad * 2
+    const destH = chipH - pad * 2
+    const ir = Math.min(destW / img.width, destH / img.height)
+    const dw = img.width * ir
+    const dh = img.height * ir
+    ctx.drawImage(img, cx - dw / 2, chipY + (chipH - dh) / 2, dw, dh)
+  } catch (e) {
+    console.warn('Logo draw failed', e)
+  }
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'
+  ctx.lineWidth = 1.5
+  ctx.beginPath()
+  ctx.moveTo(SIDE, 330)
+  ctx.lineTo(OUT_W - SIDE, 330)
+  ctx.stroke()
+
+  // ---- Photo ----
+  const photoR = 210
+  const photoCy = 700
+  try {
+    const img = await loadImg(cardEl.querySelector('.krct-photo-img').src)
+    const side = photoR * 2
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(cx, photoCy, photoR, 0, Math.PI * 2)
+    ctx.clip()
+    const s = Math.max(side / img.width, side / img.height)
+    const dw = img.width * s
+    const dh = img.height * s
+    ctx.drawImage(img, cx - dw / 2, photoCy - dh / 2, dw, dh)
+    ctx.restore()
+  } catch (e) {
+    console.warn('Photo draw failed', e)
+    ctx.fillStyle = 'rgba(255,255,255,0.12)'
+    ctx.beginPath()
+    ctx.arc(cx, photoCy, photoR, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  const draw = (textStr, size, color, weight, y, letterSpacing, maxW) => {
+    if (!textStr) return
+    ctx.save()
+    ctx.font = `${weight} ${size}px ${family}`
+    ctx.fillStyle = color
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    if (typeof ctx.letterSpacing === 'string') ctx.letterSpacing = letterSpacing || '0px'
+    let t = textStr
+    if (maxW) {
+      while (t.length > 1 && ctx.measureText(t).width > maxW) t = t.slice(0, -1)
+      if (t !== textStr) t += '…'
+    }
+    ctx.fillText(t, cx, y)
+    ctx.restore()
+  }
+
+  // ---- Identity ----
+  draw(text('.krct-eyebrow') || 'WELCOME, FRESHER', 42, accent, 500, 990, '5.9px')
+  draw(text('.krct-name'), 84, '#ffffff', 600, 1090, '0px', divW * 0.98)
+  draw(text('.krct-dept').toUpperCase(), 46, '#8b95a6', 500, 1182, '2.5px')
+
+  // ---- Quote ----
+  ctx.font = `600 74px ${family}`
+  ctx.fillStyle = accent
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('❞', cx, 1295)
+  const qStart = text('.krct-quote-text') || 'Make today count, tomorrow will thank you.'
+  ctx.save()
+  ctx.font = `italic 500 52px ${family}`
+  const qLines = wrapText(ctx, qStart, divW * 0.94)
+  const lines = qLines.slice(0, 3)
+  if (qLines.length > 3) lines[2] = lines[2].slice(0, -1) + '…'
+  const lh = Math.round(52 * 1.55)
+  const blockTop = 1400 + ((3 - lines.length) * lh) / 2
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'top'
+  lines.forEach((line, i) => ctx.fillText(line, cx, blockTop + i * lh))
+  ctx.restore()
+
+  // ---- Footer ----
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'
+  ctx.lineWidth = 1.5
+  ctx.beginPath()
+  ctx.moveTo(SIDE, 2040)
+  ctx.lineTo(OUT_W - SIDE, 2040)
+  ctx.stroke()
+  draw(text('.krct-hashtag') || 'FRESHERS DAY 2026', 42, 'rgba(255,255,255,0.7)', 600, 2110, '3.4px')
+
+  const id = text('.krct-card-id')
+  ctx.save()
+  ctx.font = `600 30px ${family}`
+  const pillW = Math.round(ctx.measureText(id).width) + 96
+  const pillH = 88
+  const pillY = 2194
+  roundedRect(ctx, cx - pillW / 2, pillY, pillW, pillH, pillH / 2)
+  ctx.fillStyle = rgba(accent, 0.14)
+  ctx.fill()
+  ctx.strokeStyle = rgba(accent, 0.35)
+  ctx.lineWidth = 2.5
+  ctx.stroke()
+  ctx.restore()
+  draw(id, 30, accent, 600, pillY + pillH / 2, '1.2px')
+
+  return await new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob)
+      else reject(new Error('Canvas export failed'))
+    }, 'image/png')
+  })
 }
