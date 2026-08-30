@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { toPng } from 'html-to-image'
 import CardResult from '../components/CardResult'
 import StyleSelector from '../components/StyleSelector'
 import BackgroundFX from '../components/BackgroundFX'
@@ -7,6 +6,7 @@ import PhotoEditor from '../components/PhotoEditor'
 import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
+import { renderCardToBlob } from '../utils/cardRenderer'
 import { submitForm, updateCardStyle } from '../utils/api'
 import { COLLEGE_DEPARTMENTS, COLLEGES, getQuoteFor } from '../utils/constants'
 import { BRAND } from '../utils/brand'
@@ -194,52 +194,14 @@ function FormPage() {
       return null
     }
     try {
-      // Wait for Inter + card images so the capture is fully laid out and
-      // pixel-identical to what is on screen.
-      if (document.fonts?.ready) await document.fonts.ready
-
-      // Build an off-screen 1350px-wide copy of the card so the browser lays
-      // it out naturally with the real stylesheet + fonts (no subpixel overlap).
-      const clone = srcEl.cloneNode(true)
-      clone.removeAttribute('id')
-      clone.style.width = '1350px'
-      clone.style.height = 'auto'
-      clone.style.margin = '0'
-      clone.style.touchAction = 'auto'
-
-      const holder = document.createElement('div')
-      holder.style.cssText =
-        'position:fixed;left:-20000px;top:0;width:1350px;z-index:-9999;pointer-events:none;'
-      holder.appendChild(clone)
-      document.body.appendChild(holder)
-
-      try {
-        // Let layout settle: a couple of frames + image decodes.
-        await new Promise(r => setTimeout(r, 120))
-        await Promise.all(
-          Array.from(clone.querySelectorAll('img')).map((img) =>
-            img.decode ? img.decode().catch(() => {}) : Promise.resolve()
-          )
-        )
-        const rect = clone.getBoundingClientRect()
-        const w = rect.width || 1350
-        const h = rect.height || Math.round((w * 16) / 9)
-
-        const dataUrl = await toPng(clone, {
-          backgroundColor: '#0a1128',
-          width: w,
-          height: h,
-          pixelRatio: 1,
-          skipAutoScale: true,
-          cacheBust: true
-        })
-        const res = await fetch(dataUrl)
-        return await res.blob()
-      } finally {
-        holder.remove()
-      }
+      // Render the card directly to a 1350x2400 canvas. Layout geometry + theme
+      // colors are measured from a laid-out 1350px copy of the real card, so
+      // the PNG always matches the screen exactly and is never small/blurry.
+      const blob = await renderCardToBlob(srcEl)
+      if (!blob) throw new Error('renderCardToBlob returned no blob')
+      return blob
     } catch (err) {
-      console.error('toPng failed:', err)
+      console.error('Card render failed:', err)
       throw err
     }
   }, [])
