@@ -194,13 +194,12 @@ function FormPage() {
       return null
     }
     try {
-      // Make sure Inter is loaded and laid out before capturing, so the export
-      // matches exactly what the user sees on screen.
+      // Wait for Inter + card images so the capture is fully laid out and
+      // pixel-identical to what is on screen.
       if (document.fonts?.ready) await document.fonts.ready
 
-      // Render an off-screen 1350px-wide copy of the card and let the browser
-      // lay it out naturally with the real stylesheet + fonts. Capturing this
-      // copy is pixel-identical to the on-screen card, at high resolution.
+      // Build an off-screen 1350px-wide copy of the card so the browser lays
+      // it out naturally with the real stylesheet + fonts (no subpixel overlap).
       const clone = srcEl.cloneNode(true)
       clone.removeAttribute('id')
       clone.style.width = '1350px'
@@ -215,9 +214,21 @@ function FormPage() {
       document.body.appendChild(holder)
 
       try {
-        await new Promise(r => setTimeout(r, 350))
+        // Let layout settle: a couple of frames + image decodes.
+        await new Promise(r => setTimeout(r, 120))
+        await Promise.all(
+          Array.from(clone.querySelectorAll('img')).map((img) =>
+            img.decode ? img.decode().catch(() => {}) : Promise.resolve()
+          )
+        )
+        const rect = clone.getBoundingClientRect()
+        const w = rect.width || 1350
+        const h = rect.height || Math.round((w * 16) / 9)
+
         const dataUrl = await toPng(clone, {
           backgroundColor: '#0a1128',
+          width: w,
+          height: h,
           pixelRatio: 1,
           skipAutoScale: true,
           cacheBust: true
