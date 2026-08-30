@@ -1034,12 +1034,12 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 24px;
+  padding: 14px 24px;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.18);
 }
 
 .krct-brand {
-  height: 84px;
+  height: 70px;
   width: 100%;
   max-width: none;
   flex: none;
@@ -1049,7 +1049,7 @@ label {
   background: var(--krct-logo-bg, rgba(255, 255, 255, 0.10));
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 14px;
-  padding: 10px 16px;
+  padding: 8px 16px;
   box-shadow:
     0 6px 18px rgba(0, 0, 0, 0.35),
     inset 0 0 0 1px color-mix(in srgb, var(--krct-accent) 35%, transparent);
@@ -1072,15 +1072,15 @@ label {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 16px 24px 0;
+  padding: 12px 24px 0;
 }
 
 .krct-photo {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   background: rgba(255, 255, 255, 0.08);
   display: grid;
   place-items: center;
@@ -1100,8 +1100,8 @@ label {
 }
 
 .krct-eyebrow {
-  margin: 0 0 8px;
-  font-size: 13px;
+  margin: 0 0 6px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--krct-accent);
@@ -1109,7 +1109,7 @@ label {
 
 .krct-name {
   margin: 0 0 4px;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1.2;
   color: #ffffff;
@@ -1118,11 +1118,13 @@ label {
   text-overflow: ellipsis;
   max-width: 100%;
   letter-spacing: -0.01em;
+  position: relative;
+  z-index: 2;
 }
 
 .krct-dept {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
@@ -1134,12 +1136,12 @@ label {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
-  margin: 20px 24px 26px;
+  gap: 8px;
+  margin: 18px 24px 22px;
 }
 
 .krct-quote-icon {
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   line-height: 1;
   color: var(--krct-accent);
 }
@@ -1157,25 +1159,25 @@ label {
 /* ---- Footer row: hashtag left, card id right ---- */
 .krct-footer {
   margin-top: auto;
-  padding: 0 24px 13%;
+  padding: 0 24px 11%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .krct-footer-row {
-  padding-top: 16px;
+  padding-top: 12px;
   border-top: 0.5px solid rgba(255, 255, 255, 0.18);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   text-align: center;
 }
 
 .krct-hashtag {
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.7);
@@ -1185,14 +1187,14 @@ label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--krct-accent);
   background: color-mix(in srgb, var(--krct-accent) 14%, transparent);
   border: 1px solid color-mix(in srgb, var(--krct-accent) 35%, transparent);
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 5px 12px;
 }
 
 /* FUTURISTIC FINAL */
@@ -1366,7 +1368,7 @@ label {
 }
 
 .display-stage .style-card-final {
-  width: min(420px, 90vw, calc((100dvh - 190px) * 9 / 16));
+  width: min(420px, 90vw, calc((100dvh - 175px) * 9 / 16));
   max-height: none;
   transform: none;
 }
