@@ -4,6 +4,7 @@
 --   alter table fresher_entries
 --     add column mobile_number text,
 --     add column email text,
+--     add column hidden boolean not null default false,
 --     drop column fun_fact,
 --     drop column dream_job;
 
@@ -19,6 +20,7 @@ create table fresher_entries (
   style text not null default 'futuristic',
   made_in_seconds numeric,
   consent_given boolean not null default false,
+  hidden boolean not null default false,
   created_at timestamptz not null default now()
 );
 

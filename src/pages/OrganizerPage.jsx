@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { fetchEntries } from '../utils/api'
+import { fetchEntries, setCardHidden } from '../utils/api'
 import { showToast } from '../utils/toast'
 
 function OrganizerPage() {
@@ -7,6 +7,7 @@ function OrganizerPage() {
   const [unlocked, setUnlocked] = useState(false)
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(false)
+  const [updatingId, setUpdatingId] = useState(null)
   const [error, setError] = useState('')
 
   const handleUnlock = useCallback(async (e) => {
@@ -53,6 +54,20 @@ function OrganizerPage() {
     URL.revokeObjectURL(link.href)
     showToast('CSV downloaded!', 'success')
   }, [entries])
+
+  const handleToggleHidden = useCallback(async (entry) => {
+    const next = !entry.hidden
+    setUpdatingId(entry.id)
+    try {
+      await setCardHidden(entry.card_id, next, password)
+      setEntries(prev => prev.map(e => (e.id === entry.id ? { ...e, hidden: next } : e)))
+      showToast(next ? `Hidden ${entry.card_id} from display` : `Shown ${entry.card_id} on display`, 'success')
+    } catch (err) {
+      showToast(err.message || 'Update failed', 'error')
+    } finally {
+      setUpdatingId(null)
+    }
+  }, [password])
 
   if (!unlocked) {
     return (
@@ -129,6 +144,7 @@ function OrganizerPage() {
                 <th>Email</th>
                 <th>Time</th>
                 <th>Consent</th>
+                <th>Display</th>
                 <th>Created</th>
               </tr>
             </thead>
@@ -149,6 +165,25 @@ function OrganizerPage() {
                     ) : (
                       <span style={{ color: 'var(--error)' }}>✗ No</span>
                     )}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleHidden(entry)}
+                      disabled={updatingId === entry.id}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: 8,
+                        fontSize: '0.72rem',
+                        fontWeight: 600,
+                        cursor: updatingId === entry.id ? 'wait' : 'pointer',
+                        border: `1px solid ${entry.hidden ? 'var(--error)' : 'var(--accent)'}`,
+                        background: entry.hidden ? 'rgba(255,92,92,0.08)' : 'rgba(0,212,170,0.08)',
+                        color: entry.hidden ? 'var(--error)' : 'var(--accent)'
+                      }}
+                    >
+                      {updatingId === entry.id ? '…' : entry.hidden ? 'Show' : 'Hide'}
+                    </button>
                   </td>
                   <td style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
                     {new Date(entry.created_at).toLocaleString()}

@@ -19,12 +19,7 @@ function DisplayPage() {
   const load = useCallback(async () => {
     try {
       const data = await fetchDisplay(password, 80)
-      setEntries(prev => {
-        // Merge new entries (by card_id) without resetting the rotation jarringly
-        const map = new Map(prev.map(e => [e.card_id, e]))
-        data.forEach(e => map.set(e.card_id, e))
-        return data.length ? data : Array.from(map.values())
-      })
+      setEntries(data)
       setError('')
     } catch (err) {
       // A 401 means the saved password is wrong/expired — drop back to the gate.
@@ -64,6 +59,12 @@ function DisplayPage() {
     }, ROTATE_MS)
     return () => clearInterval(t)
   }, [entries.length])
+
+  useEffect(() => {
+    if (index >= entries.length && entries.length > 0) {
+      setIndex(0)
+    }
+  }, [entries.length, index])
 
   const current = entries[index]
 

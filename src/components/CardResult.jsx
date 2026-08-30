@@ -1,8 +1,7 @@
 import { forwardRef, useImperativeHandle } from 'react'
-import { BRAND } from '../utils/brand'
 import { COLLEGES } from '../utils/constants'
 
-const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onInstagramStory, onMakeAnother, hideActions }, ref) => {
+const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWhatsApp, onInstagramStory, onMakeAnother, onChangeTemplate, hideActions }, ref) => {
   useImperativeHandle(ref, () => ({
     getElement: () => document.getElementById('card-element')
   }))
@@ -19,8 +18,11 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
     <div>
       <div id="card-element" className={`style-card-final krct-card ${selectedStyle || 'futuristic'}-final`}>
         <div className="krct-header">
-          <img className="krct-brand" src={collegeInfo.logo} alt={collegeInfo.short} />
-          <span className="krct-year">2026</span>
+          <img
+            className={`krct-brand${collegeInfo.id === 'KRCT' ? ' krct-brand-lite' : ''}`}
+            src={collegeInfo.logo}
+            alt={collegeInfo.short}
+          />
         </div>
 
         <div className="krct-identity">
@@ -37,8 +39,8 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
 
         <div className="krct-footer">
           <div className="krct-footer-row">
-            <span className="krct-hashtag">{BRAND.hashtag}</span>
-            <span className="krct-card-id">#{cardId}</span>
+            <span className="krct-hashtag">FRESHERS DAY 2026</span>
+            <span className="krct-card-id">{cardId}</span>
           </div>
         </div>
       </div>
@@ -80,6 +82,17 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
             IG Story
           </button>
         </div>
+        {onChangeTemplate && (
+          <button type="button" className="btn btn-ghost" onClick={onChangeTemplate}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 2a7.35 7.35 0 0 0 4.95 12.28 9.9 9.9 0 0 1 3.55-9.06" />
+              <circle cx="8" cy="8" r="1" />
+              <circle cx="16" cy="8" r="1" />
+            </svg>
+            Change Template
+          </button>
+        )}
         <button type="button" className="btn btn-ghost" onClick={onMakeAnother}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginRight: '4px' }}>
             <polyline points="1 4 1 10 7 10" />

@@ -19,7 +19,7 @@ function checkRateLimit(ip) {
 
 function generateCardId() {
   const num = Math.floor(Math.random() * 90000) + 10000
-  return `KRGRP2026-${num}`
+  return `KRFRESHER-${num}`
 }
 
 export default async function handler(req, res) {

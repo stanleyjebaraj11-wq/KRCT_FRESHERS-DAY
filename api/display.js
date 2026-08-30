@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const rows = await sql`
       SELECT card_id, name, college, department, photo, style, made_in_seconds, created_at
       FROM fresher_entries
-      WHERE photo IS NOT NULL
+      WHERE photo IS NOT NULL AND COALESCE(hidden, false) = false
       ORDER BY created_at DESC
       LIMIT ${limit}
     `

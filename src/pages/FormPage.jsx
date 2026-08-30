@@ -7,7 +7,7 @@ import PhotoEditor from '../components/PhotoEditor'
 import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
-import { submitForm } from '../utils/api'
+import { submitForm, updateCardStyle } from '../utils/api'
 import { DEPARTMENTS, COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
 import logo from '../assets/logo.png'
@@ -168,10 +168,22 @@ function FormPage() {
     stopCamera()
   }, [stopCamera])
 
-  const handleStyleSelect = useCallback((style) => {
+  const handleStyleSelect = useCallback(async (style) => {
+    if (cardId) {
+      try {
+        await updateCardStyle(cardId, style)
+      } catch (err) {
+        showToast(err.message || 'Could not save template on server', 'error')
+      }
+    }
     setSelectedStyle(style)
     setStep('result')
     showToast('Card generated! 🎉', 'success')
+  }, [cardId])
+
+  const handleChangeTemplate = useCallback(() => {
+    setStep('style')
+    showToast('Pick another template', 'info')
   }, [])
 
   const getCardBlob = useCallback(async () => {
@@ -338,7 +350,7 @@ function FormPage() {
         <header className="header">
           <img className="header-logo" src={logo} alt="KR Logo" />
           <div className="logo">
-            <h1>K. Ramakrishnan</h1>
+            <h1>K. RAMAKRISHNAN</h1>
             <h2>Group of Institutions</h2>
             <h2 className="logo-tag">FRESHER CARD</h2>
           </div>
@@ -605,6 +617,7 @@ function FormPage() {
             onWhatsApp={handleWhatsApp}
             onInstagramStory={handleInstagramStory}
             onMakeAnother={handleMakeAnother}
+            onChangeTemplate={handleChangeTemplate}
           />
         )}
       </div>

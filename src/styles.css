@@ -248,14 +248,14 @@ label {
 }
 
 .logo h1 {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.15;
   letter-spacing: -0.03em;
 }
 
 .logo h2 {
-  font-size: 1.05rem;
+  font-size: 1.35rem;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -1033,28 +1033,34 @@ label {
 .krct-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: center;
   padding: 20px 24px;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.18);
 }
 
 .krct-brand {
-  height: 64px;
-  width: auto;
-  max-width: 340px;
-  flex: 1;
+  height: 84px;
+  width: 100%;
+  max-width: none;
+  flex: none;
   min-width: 0;
   object-fit: contain;
-  object-position: left center;
+  object-position: center;
+  background: var(--krct-logo-bg, rgba(255, 255, 255, 0.10));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 10px 16px;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px color-mix(in srgb, var(--krct-accent) 35%, transparent);
 }
 
-.krct-year {
-  flex-shrink: 0;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--krct-accent);
+.krct-brand-lite {
+  background: linear-gradient(135deg, #ffffff 0%, #dfe7f3 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px color-mix(in srgb, var(--krct-accent) 45%, transparent);
 }
 
 /* ---- Photo + identity ---- */
@@ -1146,44 +1152,69 @@ label {
 .krct-footer {
   margin-top: auto;
   padding: 0 24px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .krct-footer-row {
   padding-top: 16px;
   border-top: 0.5px solid rgba(255, 255, 255, 0.18);
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
 }
 
-.krct-hashtag,
-.krct-card-id {
+.krct-hashtag {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.krct-card-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--krct-accent);
+  background: color-mix(in srgb, var(--krct-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--krct-accent) 35%, transparent);
+  border-radius: 999px;
+  padding: 6px 14px;
 }
 
 /* FUTURISTIC FINAL */
 .futuristic-final {
   background: radial-gradient(circle at 50% 45%, rgba(0,120,255,0.25), transparent 35%), #030b1a;
   --krct-accent: #67dcff;
+  --krct-logo-bg: linear-gradient(135deg, #06233f, #0a3056);
 }
 
 /* DREAMER FINAL */
 .dreamer-final {
   background: radial-gradient(circle at 50% 15%, rgba(255,194,242,0.65), transparent 22%), linear-gradient(180deg, #241c58, #5d3577 55%, #b36b91);
   --krct-accent: #ffd1e8;
+  --krct-logo-bg: linear-gradient(135deg, #241c58, #402a6b);
 }
 
 /* BOLD FINAL */
 .bold-final {
   background: #08090d;
   --krct-accent: #f02222;
+  --krct-logo-bg: linear-gradient(135deg, #16060a, #2b0d13);
 }
 
 /* CLASSIC FINAL */
 .classic-final {
   background: linear-gradient(180deg, #07152c, #0a1d3a);
   --krct-accent: #efc56c;
+  --krct-logo-bg: linear-gradient(135deg, #0b2240, #123a5e);
 }
 
 /* ===== LIVE SLIDESHOW MONITOR (/display) ===== */
