@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const VIEW_SIZE = 320
-const OUT_SIZE = 600
+const OUT_SIZE = 1440
 const MIN_ZOOM = 1
 const MAX_ZOOM = 5
 const ZOOM_STEP = 1.12
@@ -118,7 +118,7 @@ export default function PhotoEditor({ src, onConfirm, onRetake, onChooseAnother,
       OUT_SIZE,
       OUT_SIZE
     )
-    onConfirm(canvas.toDataURL('image/jpeg', 0.9))
+    onConfirm(canvas.toDataURL('image/jpeg', 0.92))
   }
 
   return (

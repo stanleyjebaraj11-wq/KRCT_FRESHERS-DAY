@@ -194,15 +194,16 @@ function FormPage() {
       return null
     }
     try {
-      // Always export at least 1080px wide (sharp full-bleed on story/status).
-      const ratio = el.offsetWidth > 0 ? Math.max(2, 1080 / el.offsetWidth) : 2
+      // Export at 1350px+ wide for a crisp full-bleed story/status image.
+      // Fonts are embedded (no skipFonts) so the exported card reflows exactly
+      // like the on-screen card instead of swapping to a fallback font.
+      const ratio = el.offsetWidth > 0 ? Math.max(2.5, 1350 / el.offsetWidth) : 3
       const dataUrl = await toPng(el, {
         backgroundColor: '#0a1128',
         pixelRatio: ratio,
         quality: 0.95,
         skipAutoScale: true,
         cacheBust: true,
-        skipFonts: true,
         filter: (node) => {
           if (node.tagName === 'STYLE') return false
           return true
