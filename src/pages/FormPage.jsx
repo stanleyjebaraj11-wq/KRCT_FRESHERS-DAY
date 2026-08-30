@@ -188,29 +188,45 @@ function FormPage() {
   }, [])
 
   const getCardBlob = useCallback(async () => {
-    const el = cardRef.current?.getElement?.() || cardRef.current
-    if (!el) {
+    const srcEl = cardRef.current?.getElement?.() || cardRef.current
+    if (!srcEl) {
       console.error('Card element not found')
       return null
     }
     try {
-      // Export at 1350px+ wide for a crisp full-bleed story/status image.
-      // Fonts are embedded (no skipFonts) so the exported card reflows exactly
-      // like the on-screen card instead of swapping to a fallback font.
-      const ratio = el.offsetWidth > 0 ? Math.max(2.5, 1350 / el.offsetWidth) : 3
-      const dataUrl = await toPng(el, {
-        backgroundColor: '#0a1128',
-        pixelRatio: ratio,
-        quality: 0.95,
-        skipAutoScale: true,
-        cacheBust: true,
-        filter: (node) => {
-          if (node.tagName === 'STYLE') return false
-          return true
-        }
-      })
-      const res = await fetch(dataUrl)
-      return await res.blob()
+      // Make sure Inter is loaded and laid out before capturing, so the export
+      // matches exactly what the user sees on screen.
+      if (document.fonts?.ready) await document.fonts.ready
+
+      // Render an off-screen 1350px-wide copy of the card and let the browser
+      // lay it out naturally with the real stylesheet + fonts. Capturing this
+      // copy is pixel-identical to the on-screen card, at high resolution.
+      const clone = srcEl.cloneNode(true)
+      clone.removeAttribute('id')
+      clone.style.width = '1350px'
+      clone.style.height = 'auto'
+      clone.style.margin = '0'
+      clone.style.touchAction = 'auto'
+
+      const holder = document.createElement('div')
+      holder.style.cssText =
+        'position:fixed;left:-20000px;top:0;width:1350px;z-index:-9999;pointer-events:none;'
+      holder.appendChild(clone)
+      document.body.appendChild(holder)
+
+      try {
+        await new Promise(r => setTimeout(r, 350))
+        const dataUrl = await toPng(clone, {
+          backgroundColor: '#0a1128',
+          pixelRatio: 1,
+          skipAutoScale: true,
+          cacheBust: true
+        })
+        const res = await fetch(dataUrl)
+        return await res.blob()
+      } finally {
+        holder.remove()
+      }
     } catch (err) {
       console.error('toPng failed:', err)
       throw err
