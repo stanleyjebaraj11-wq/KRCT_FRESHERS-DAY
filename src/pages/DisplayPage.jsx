@@ -5,11 +5,13 @@ import { getRandomQuote } from '../utils/constants'
 
 const ROTATE_MS = 6000
 const REFRESH_MS = 8000
+const NEW_MS = 90000
 const DISPLAY_KEY = 'krct_display_password'
 
 function DisplayPage() {
   const [entries, setEntries] = useState([])
   const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
   const [loading, setLoading] = useState(true)
   const [password, setPassword] = useState(() => sessionStorage.getItem(DISPLAY_KEY) || '')
   const [unlocked, setUnlocked] = useState(() => !!sessionStorage.getItem(DISPLAY_KEY))
@@ -53,12 +55,12 @@ function DisplayPage() {
   }, [unlocked, load])
 
   useEffect(() => {
-    if (entries.length <= 1) return
+    if (entries.length <= 1 || paused) return
     const t = setInterval(() => {
       setIndex(i => (i + 1) % entries.length)
     }, ROTATE_MS)
     return () => clearInterval(t)
-  }, [entries.length])
+  }, [entries.length, paused])
 
   useEffect(() => {
     if (index >= entries.length && entries.length > 0) {
@@ -66,7 +68,13 @@ function DisplayPage() {
     }
   }, [entries.length, index])
 
+  const goNext = useCallback(() => {
+    if (entries.length <= 1) return
+    setIndex(i => (i + 1) % entries.length)
+  }, [entries.length])
+
   const current = entries[index]
+  const isNew = current && (Date.now() - new Date(current.created_at).getTime()) < NEW_MS
 
   if (!unlocked) {
     return (
@@ -109,6 +117,20 @@ function DisplayPage() {
         </div>
       </div>
 
+      <div className="display-controls">
+        <button
+          type="button"
+          className={paused ? 'dc-btn dc-btn-active' : 'dc-btn'}
+          onClick={() => setPaused(p => !p)}
+        >
+          {paused ? '▶ Resume' : '❚❚ Pause'}
+        </button>
+        <button type="button" className="dc-btn" onClick={goNext} disabled={entries.length <= 1}>
+          Next ▶❘
+        </button>
+        {paused && <span className="dc-hint">Rotation paused — showing a fixed card</span>}
+      </div>
+
       <div className="display-stage">
         {loading && entries.length === 0 && (
           <p className="display-loading">Loading fresher cards…</p>
@@ -117,19 +139,22 @@ function DisplayPage() {
           <p className="display-loading">No cards yet — generate one to see it here! 🎉</p>
         )}
         {current && (
-          <CardResult
-            ref={cardRef}
-            hideActions
-            data={{
-              cardId: current.card_id,
-              name: current.name,
-              department: current.department,
-              college: current.college,
-              photo: current.photo,
-              quote: getRandomQuote(),
-              selectedStyle: current.style
-            }}
-          />
+          <div className="display-card-wrap">
+            <CardResult
+              ref={cardRef}
+              hideActions
+              data={{
+                cardId: current.card_id,
+                name: current.name,
+                department: current.department,
+                college: current.college,
+                photo: current.photo,
+                quote: getRandomQuote(),
+                selectedStyle: current.style
+              }}
+            />
+            {isNew && <div className="display-new-badge">NEW</div>}
+          </div>
         )}
       </div>
 

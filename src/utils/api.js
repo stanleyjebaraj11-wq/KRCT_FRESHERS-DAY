@@ -56,6 +56,33 @@ export async function setCardHidden(cardId, hidden, password) {
   return result
 }
 
+// Permanently deletes an entry. Requires the organizer password.
+export async function deleteEntry(cardId, password) {
+  if (import.meta.env.DEV) {
+    await new Promise(r => setTimeout(r, 150))
+    return { ok: true }
+  }
+
+  const res = await fetch('/api/delete-entry', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cardId, password })
+  })
+
+  let result
+  try {
+    result = await res.json()
+  } catch {
+    throw new Error('Server returned an invalid response. Please try again.')
+  }
+
+  if (!res.ok) {
+    throw new Error(result.error || 'Delete failed')
+  }
+
+  return result
+}
+
 export async function fetchEntries(password) {
   const res = await fetch(`/api/list?password=${encodeURIComponent(password)}`)
   let result

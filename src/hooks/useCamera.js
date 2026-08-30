@@ -3,10 +3,19 @@ import { useState, useCallback, useRef } from 'react'
 export function useCamera() {
   const [stream, setStream] = useState(null)
   const [error, setError] = useState(null)
+  const [starting, setStarting] = useState(false)
   const streamRef = useRef(null)
 
   const startCamera = useCallback(async () => {
     setError(null)
+    // Always release any previous stream before requesting a new one (also
+    // protects against React StrictMode double-invoke leaving a stale stream).
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+      setStream(null)
+    }
+    setStarting(true)
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -20,6 +29,8 @@ export function useCamera() {
       setStream(mediaStream)
     } catch (err) {
       setError(err.message)
+    } finally {
+      setStarting(false)
     }
   }, [])
 
@@ -47,5 +58,5 @@ export function useCamera() {
     return Promise.resolve(canvasEl.toDataURL('image/jpeg', 0.9))
   }, [stream])
 
-  return { stream, startCamera, stopCamera, capturePhoto, error }
+  return { stream, startCamera, stopCamera, capturePhoto, error, starting }
 }

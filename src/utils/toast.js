@@ -5,22 +5,24 @@ export function showToast(message, type = 'success') {
     toastEl.remove()
   }
 
-  toastEl = document.createElement('div')
-  toastEl.className = `toast ${type}`
-  toastEl.textContent = message
-  document.body.appendChild(toastEl)
+  const el = document.createElement('div')
+  el.className = `toast ${type}`
+  el.textContent = message
+  document.body.appendChild(el)
+  toastEl = el
 
-  setTimeout(() => {
-    if (toastEl) {
-      toastEl.style.opacity = '0'
-      toastEl.style.transform = 'translateX(-50%) translateY(20px)'
-      toastEl.style.transition = 'all 0.3s ease'
-      setTimeout(() => {
-        if (toastEl) {
-          toastEl.remove()
-          toastEl = null
-        }
-      }, 300)
-    }
-  }, 3000)
+  const hide = () => {
+    if (toastEl !== el) return
+    el.style.opacity = '0'
+    el.style.transform = 'translateX(-50%) translateY(20px)'
+    el.style.transition = 'all 0.3s ease'
+    setTimeout(() => {
+      if (toastEl === el) {
+        el.remove()
+        toastEl = null
+      }
+    }, 300)
+  }
+
+  setTimeout(hide, 3000)
 }

@@ -8,7 +8,7 @@ import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm, updateCardStyle } from '../utils/api'
-import { DEPARTMENTS, COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
+import { COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
 import logo from '../assets/logo.png'
 
@@ -34,7 +34,14 @@ function FormPage() {
   const [selectedStyle, setSelectedStyle] = useState(null)
 
   const timer = useTimer(focused)
-  const { stream, startCamera, stopCamera, capturePhoto, error: cameraError } = useCamera()
+  const { stream, startCamera, stopCamera, capturePhoto, error: cameraError, starting: cameraStarting } = useCamera()
+
+  const cameraBlocked = cameraError && /denied|permission/i.test(String(cameraError))
+  const cameraHint = cameraBlocked
+    ? 'Camera permission is blocked. Allow camera access in your browser settings, or upload a photo from the gallery below.'
+    : cameraError
+      ? 'Camera unavailable. You can still upload a photo from the gallery below.'
+      : 'Camera not available. Use the upload button below.'
 
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -146,12 +153,6 @@ function FormPage() {
     setPendingPhoto(dataUrl)
     setPhotoMode('edit')
   }, [stopCamera])
-
-  const handleRetake = useCallback(() => {
-    setPhoto(null)
-    setStep('photo')
-    startCamera()
-  }, [startCamera])
 
   const handleMakeAnother = useCallback(() => {
     setStep('form')
@@ -369,6 +370,7 @@ function FormPage() {
                 onChange={e => updateField('name', e.target.value)}
                 onBlur={() => { if (formData.name && errors.name) validateForm() }}
                 autoComplete="name"
+                autoFocus
                 maxLength={60}
               />
               {errors.name && <div className="field-error">{errors.name}</div>}
@@ -454,7 +456,7 @@ function FormPage() {
 
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary btn-sticky"
               disabled={!isFormComplete || isSubmitting}
               onClick={handleContinue}
             >
@@ -533,14 +535,27 @@ function FormPage() {
                   </button>
                 </>
               )}
-              {!stream && (
+              {!stream && cameraStarting && (
+                <div className="camera-error" style={{ border: '2px dashed var(--border)' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--muted)', marginBottom: '8px', animation: 'spin 1.2s linear infinite' }}>
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                  <p style={{ fontSize: '1.0625rem', fontWeight: 500 }}>Starting camera…</p>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.875rem' }}>Allow camera access if your browser asks</p>
+                </div>
+              )}
+              {!stream && !cameraStarting && (
                 <div className="camera-error" style={{ border: '2px dashed var(--border)' }}>
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--muted)', marginBottom: '8px' }}>
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                     <circle cx="12" cy="13" r="4"/>
                   </svg>
-                  <p style={{ fontSize: '1.0625rem', fontWeight: 500 }}>Camera not available</p>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.875rem' }}>Use the upload button below</p>
+                  <p style={{ fontSize: '1.0625rem', fontWeight: 500 }}>{cameraBlocked ? 'Camera permission denied' : 'Camera not available'}</p>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.875rem' }}>{cameraHint}</p>
+                  <button type="button" className="btn btn-secondary" onClick={() => startCamera()} style={{ width: 'auto', minHeight: 46, padding: '12px 20px' }}>
+                    ↻ Retry Camera
+                  </button>
                 </div>
               )}
               <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -572,7 +587,9 @@ function FormPage() {
                   ? 'Generating your card...'
                   : stream
                     ? 'Tap green circle to capture, or upload from gallery'
-                    : 'Select a photo from your gallery'}
+                    : cameraStarting
+                      ? 'Starting camera…'
+                      : 'Select a photo from your gallery'}
               </p>
             </div>
             <button
