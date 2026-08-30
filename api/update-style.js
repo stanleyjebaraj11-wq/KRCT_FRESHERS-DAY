@@ -2,7 +2,7 @@ import { neon } from '@neondatabase/serverless'
 
 const sql = neon(process.env.DATABASE_URL)
 
-const VALID_STYLES = ['futuristic', 'dreamer', 'bold', 'classic']
+const VALID_STYLES = ['futuristic', 'dreamer', 'bold', 'classic', 'royal', 'spiderman', 'batman', 'onepiece', 'anime']
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

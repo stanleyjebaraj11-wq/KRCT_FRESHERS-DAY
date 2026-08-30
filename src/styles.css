@@ -1310,6 +1310,149 @@ label {
   --krct-logo-bg: linear-gradient(135deg, #0b2240, #123a5e);
 }
 
+/* SPIDERMAN FINAL */
+.spiderman-final {
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.18), transparent 45%), linear-gradient(180deg, #8b1e2d, #b3263a 45%, #1d3a66);
+  --krct-accent: #59d0ff;
+  --krct-logo-bg: linear-gradient(135deg, #6b1522, #244a7d);
+}
+
+.spiderman-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 40px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 40px);
+  pointer-events: none;
+}
+
+.spiderman-final::after {
+  content: '🕷';
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  opacity: 0.8;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+/* BATMAN FINAL */
+.batman-final {
+  background: radial-gradient(circle at 50% 8%, rgba(226, 177, 60, 0.14), transparent 38%), linear-gradient(180deg, #0d0d10, #1c1c21 50%, #27272d);
+  --krct-accent: #e2b13c;
+  --krct-logo-bg: linear-gradient(135deg, #1a1a1e, #33333b);
+}
+
+.batman-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 44px);
+  pointer-events: none;
+}
+
+.batman-final::after {
+  content: '🦇';
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  color: rgba(226, 177, 60, 0.85);
+  font-size: 26px;
+  filter: drop-shadow(0 2px 8px rgba(226, 177, 60, 0.35));
+}
+
+/* ONE PIECE FINAL */
+.onepiece-final {
+  background: radial-gradient(circle at 88% 6%, rgba(240, 193, 90, 0.22), transparent 40%), linear-gradient(180deg, #06202c, #0e4b52 55%, #7a2a1c);
+  --krct-accent: #f0c15a;
+  --krct-logo-bg: linear-gradient(135deg, #0a2c38, #2f5f63);
+}
+
+.onepiece-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(120deg, rgba(159, 232, 232, 0.05) 0 2px, transparent 2px 42px);
+  pointer-events: none;
+}
+
+.onepiece-final::after {
+  content: '⛵ ✦ ⚓';
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  color: rgba(240, 193, 90, 0.5);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  pointer-events: none;
+}
+
+/* ANIME FINAL */
+.anime-final {
+  background: radial-gradient(circle at 50% 10%, rgba(255, 194, 230, 0.28), transparent 40%), linear-gradient(180deg, #4a1a6b, #c2558f 55%, #ff9db3);
+  --krct-accent: #ffd9ea;
+  --krct-logo-bg: linear-gradient(135deg, #6a2f92, #9a4a7f);
+}
+
+.anime-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 12% 14%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1.5px 1.5px at 24% 7%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(2px 2px at 82% 18%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 16% 52%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(2px 2px at 88% 62%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 8% 80%, rgba(255, 255, 255, 0.45), transparent);
+  pointer-events: none;
+}
+
+.anime-final::after {
+  content: '✿ ✧ ✿';
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  color: rgba(255, 241, 246, 0.6);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  pointer-events: none;
+}
+
+/* ROYAL FINAL */
+.royal-final {
+  background: radial-gradient(circle at 50% 12%, rgba(255, 215, 106, 0.16), transparent 45%), linear-gradient(180deg, #140a30, #2a1156 50%, #4d1f7d);
+  --krct-accent: #ffd76a;
+  --krct-logo-bg: linear-gradient(135deg, #241252, #4b2380);
+}
+
+.royal-final::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(255, 215, 106, 0.4);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 4px rgba(255, 215, 106, 0.05);
+  pointer-events: none;
+}
+
+.royal-final::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 18% 8%, rgba(255, 215, 106, 0.8), transparent),
+    radial-gradient(1px 1px at 70% 15%, rgba(255, 215, 106, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 85% 40%, rgba(255, 215, 106, 0.5), transparent),
+    radial-gradient(1px 1px at 12% 33%, rgba(255, 215, 106, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 88% 70%, rgba(255, 215, 106, 0.5), transparent);
+  pointer-events: none;
+}
+
 /* ===== LIVE SLIDESHOW MONITOR (/display) ===== */
 .display-page {
   min-height: 100vh;
