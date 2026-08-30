@@ -33,9 +33,9 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests, please wait a moment' })
   }
 
-  const { name, college, department, funFact, dreamJob, photo, style, madeInSeconds, consentGiven } = req.body
+  const { name, college, department, mobile, email, photo, style, madeInSeconds, consentGiven } = req.body
 
-  if (!name?.trim() || !department?.trim() || !funFact?.trim() || !dreamJob?.trim()) {
+  if (!name?.trim() || !department?.trim()) {
     return res.status(400).json({ error: 'All fields are required' })
   }
 
@@ -43,12 +43,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Consent is required' })
   }
 
-  if (funFact.length > 50) {
-    return res.status(400).json({ error: 'Fun fact must be 50 characters or less' })
+  const mobileDigits = String(mobile || '').replace(/\D/g, '')
+  if (mobileDigits.length !== 10) {
+    return res.status(400).json({ error: 'Enter a valid 10-digit mobile number' })
   }
 
-  if (dreamJob.length > 20 || dreamJob.includes(' ')) {
-    return res.status(400).json({ error: 'Dream job must be one word, 20 characters or less' })
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {
+    return res.status(400).json({ error: 'Enter a valid email address' })
   }
 
   // Store the photo as a data URL (used by the live slideshow monitor).
@@ -63,8 +64,8 @@ export default async function handler(req, res) {
     const cardId = generateCardId()
 
     await sql`
-      INSERT INTO fresher_entries (card_id, name, college, department, fun_fact, dream_job, photo, style, made_in_seconds, consent_given)
-      VALUES (${cardId}, ${name.trim()}, ${safeCollege}, ${department.trim()}, ${funFact.trim()}, ${dreamJob.trim()}, ${photo || null}, ${safeStyle}, ${madeInSeconds}, ${consentGiven})
+      INSERT INTO fresher_entries (card_id, name, college, department, mobile_number, email, photo, style, made_in_seconds, consent_given)
+      VALUES (${cardId}, ${name.trim()}, ${safeCollege}, ${department.trim()}, ${mobileDigits}, ${String(email).trim()}, ${photo || null}, ${safeStyle}, ${madeInSeconds}, ${consentGiven})
     `
 
     return res.status(200).json({ cardId, madeInSeconds })

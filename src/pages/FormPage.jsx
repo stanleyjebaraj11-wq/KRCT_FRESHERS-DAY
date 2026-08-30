@@ -2,13 +2,15 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { toPng } from 'html-to-image'
 import CardResult from '../components/CardResult'
 import StyleSelector from '../components/StyleSelector'
+import BackgroundFX from '../components/BackgroundFX'
+import PhotoEditor from '../components/PhotoEditor'
 import { useTimer } from '../hooks/useTimer'
 import { useCamera } from '../hooks/useCamera'
 import { showToast } from '../utils/toast'
 import { submitForm } from '../utils/api'
 import { DEPARTMENTS, COLLEGE_DEPARTMENTS, COLLEGES, getRandomQuote } from '../utils/constants'
 import { BRAND } from '../utils/brand'
-import logo from '../assets/logo.svg'
+import logo from '../assets/logo.png'
 
 function FormPage() {
   const [step, setStep] = useState('form')
@@ -16,12 +18,14 @@ function FormPage() {
     name: '',
     college: '',
     department: '',
-    funFact: '',
-    dreamJob: '',
+    mobile: '',
+    email: '',
     consent: false
   })
   const [errors, setErrors] = useState({})
   const [photo, setPhoto] = useState(null)
+  const [photoMode, setPhotoMode] = useState('camera')
+  const [pendingPhoto, setPendingPhoto] = useState(null)
   const [cardId, setCardId] = useState(null)
   const [madeInSeconds, setMadeInSeconds] = useState(null)
   const [quote, setQuote] = useState('')
@@ -55,11 +59,16 @@ function FormPage() {
     if (!formData.name.trim()) newErrors.name = 'Name is required'
     if (!formData.college) newErrors.college = 'College is required'
     if (!formData.department) newErrors.department = 'Department is required'
-    if (!formData.funFact.trim()) newErrors.funFact = 'Fun fact is required'
-    if (formData.funFact.length > 50) newErrors.funFact = 'Fun fact must be 50 characters or less'
-    if (!formData.dreamJob.trim()) newErrors.dreamJob = 'Dream job is required'
-    if (formData.dreamJob.length > 20) newErrors.dreamJob = 'Dream job must be 20 characters or less (one word)'
-    if (formData.dreamJob.trim().includes(' ')) newErrors.dreamJob = 'Dream job must be one word'
+    if (!formData.mobile.trim()) {
+      newErrors.mobile = 'Mobile number is required'
+    } else if (!/^\d{10}$/.test(formData.mobile.trim())) {
+      newErrors.mobile = 'Enter a valid 10-digit mobile number'
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = 'Enter a valid email address'
+    }
     if (!formData.consent) newErrors.consent = 'You must agree to continue'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -102,8 +111,8 @@ function FormPage() {
         name: formData.name.trim(),
         college: formData.college,
         department: formData.department,
-        funFact: formData.funFact.trim(),
-        dreamJob: formData.dreamJob.trim(),
+        mobile: formData.mobile.trim(),
+        email: formData.email.trim(),
         photo: compressedPhoto,
         style: selectedStyle || 'futuristic',
         madeInSeconds: timer.current,
@@ -121,6 +130,23 @@ function FormPage() {
     }
   }, [formData, timer, validateForm])
 
+  const readFileAsDataUrl = useCallback((file) => {
+    return new Promise((resolve) => {
+      if (!file) return resolve(null)
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = () => resolve(null)
+      reader.readAsDataURL(file)
+    })
+  }, [])
+
+  const handleCaptured = useCallback((dataUrl) => {
+    if (!dataUrl) return
+    stopCamera()
+    setPendingPhoto(dataUrl)
+    setPhotoMode('edit')
+  }, [stopCamera])
+
   const handleRetake = useCallback(() => {
     setPhoto(null)
     setStep('photo')
@@ -129,8 +155,10 @@ function FormPage() {
 
   const handleMakeAnother = useCallback(() => {
     setStep('form')
-    setFormData({ name: '', college: '', department: '', funFact: '', dreamJob: '', consent: false })
+    setFormData({ name: '', college: '', department: '', mobile: '', email: '', consent: false })
     setPhoto(null)
+    setPhotoMode('camera')
+    setPendingPhoto(null)
     setCardId(null)
     setMadeInSeconds(null)
     setQuote('')
@@ -239,7 +267,7 @@ function FormPage() {
   }, [])
 
   const handleCopyCaption = useCallback(async () => {
-    const caption = `Just got my KR Group Fresher Card! 🎓\n\n${formData.name} | ${formData.department}\n"${formData.funFact}"\nDream job: ${formData.dreamJob}\n\n#KRGroup2026 #FreshersDay #WhereAmbitionMeetsExcellence`
+    const caption = `Just got my KR Group Fresher Card! 🎓\n\n${formData.name} | ${formData.department}\n\n#KRGroup2026 #FreshersDay #WhereAmbitionMeetsExcellence`
     try {
       await navigator.clipboard.writeText(caption)
       showToast('Caption copied!', 'success')
@@ -281,13 +309,13 @@ function FormPage() {
   }, [cardId, getCardBlob])
 
   useEffect(() => {
-    if (step === 'photo') {
+    if (step === 'photo' && photoMode === 'camera') {
       startCamera()
     } else {
       stopCamera()
     }
     return () => stopCamera()
-  }, [step, startCamera, stopCamera])
+  }, [step, photoMode, startCamera, stopCamera])
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -298,19 +326,21 @@ function FormPage() {
   const isFormComplete = formData.name.trim() &&
     formData.college &&
     formData.department &&
-    formData.funFact.trim() &&
-    formData.dreamJob.trim() &&
+    /^\d{10}$/.test(formData.mobile.trim()) &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) &&
     formData.consent
 
   return (
-    <div className="container">
-      <div className="page">
+    <>
+      {step === 'form' && <BackgroundFX />}
+      <div className="container">
+        <div className="page">
         <header className="header">
           <img className="header-logo" src={logo} alt="KR Logo" />
           <div className="logo">
-            K. Ramakrishnan Group of Institutions
-            <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
-            <span>FRESHER CARD</span>
+            <h1>K. Ramakrishnan</h1>
+            <h2>Group of Institutions</h2>
+            <h2 className="logo-tag">FRESHER CARD</h2>
           </div>
           <p className="subtitle">Where Ambition Meets Excellence</p>
         </header>
@@ -366,39 +396,33 @@ function FormPage() {
             </div>
 
             <div className="field-group">
-              <label htmlFor="funFact">Fun Fact * (max 50 chars)</label>
+              <label htmlFor="mobile">Mobile Number *</label>
               <input
-                id="funFact"
-                type="text"
-                placeholder="Something interesting about you"
-                value={formData.funFact}
-                onChange={e => updateField('funFact', e.target.value)}
-                maxLength={50}
+                id="mobile"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                maxLength={10}
+                placeholder="Enter 10-digit mobile number"
+                value={formData.mobile}
+                onChange={e => updateField('mobile', e.target.value.replace(/\D/g, ''))}
+                autoComplete="tel"
               />
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                <span className={formData.funFact.length > 45 ? 'field-error' : ''}>
-                  {formData.funFact.length}/50
-                </span>
-              </div>
-              {errors.funFact && <div className="field-error">{errors.funFact}</div>}
+              {errors.mobile && <div className="field-error">{errors.mobile}</div>}
             </div>
 
             <div className="field-group">
-              <label htmlFor="dreamJob">Dream Job * (one word, max 20 chars)</label>
+              <label htmlFor="email">Email *</label>
               <input
-                id="dreamJob"
-                type="text"
-                placeholder="e.g., Astronaut"
-                value={formData.dreamJob}
-                onChange={e => updateField('dreamJob', e.target.value)}
-                maxLength={20}
+                id="email"
+                type="email"
+                maxLength={100}
+                placeholder="Enter your email address"
+                value={formData.email}
+                onChange={e => updateField('email', e.target.value)}
+                autoComplete="email"
               />
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                <span className={formData.dreamJob.length > 18 ? 'field-error' : ''}>
-                  {formData.dreamJob.length}/20
-                </span>
-              </div>
-              {errors.dreamJob && <div className="field-error">{errors.dreamJob}</div>}
+              {errors.email && <div className="field-error">{errors.email}</div>}
             </div>
 
             <div className="field-group">
@@ -441,7 +465,28 @@ function FormPage() {
           </form>
         )}
 
-        {step === 'photo' && (
+        {step === 'photo' && (photoMode === 'edit' && pendingPhoto ? (
+          <PhotoEditor
+            src={pendingPhoto}
+            busy={isSubmitting}
+            onConfirm={(croppedDataUrl) => submitCard(croppedDataUrl)}
+            onRetake={() => {
+              setPendingPhoto(null)
+              setPhotoMode('camera')
+              startCamera()
+            }}
+            onChooseAnother={async (file) => {
+              const dataUrl = await readFileAsDataUrl(file)
+              if (dataUrl) setPendingPhoto(dataUrl)
+            }}
+            onBack={() => {
+              stopCamera()
+              setPendingPhoto(null)
+              setPhotoMode('camera')
+              setStep('form')
+            }}
+          />
+        ) : (
           <div>
             <div className="photo-capture" role="region" aria-label="Camera preview" style={{ position: 'relative' }}>
               {stream && (
@@ -463,8 +508,7 @@ function FormPage() {
                     onClick={async () => {
                       const dataUrl = await capturePhoto(videoRef.current, canvasRef.current)
                       if (dataUrl) {
-                        stopCamera()
-                        await submitCard(dataUrl)
+                        handleCaptured(dataUrl)
                       }
                     }}
                     disabled={!stream || isSubmitting}
@@ -501,30 +545,14 @@ function FormPage() {
                   type="file"
                   accept="image/*"
                   style={{ display: 'none' }}
-                      onChange={async e => {
-                        const file = e.target.files[0]
-                        if (file) {
-                          const reader = new FileReader()
-                          reader.onload = () => {
-                            const img = new Image()
-                            img.onload = async () => {
-                              const canvas = document.createElement('canvas')
-                              const size = Math.min(img.width, img.height)
-                              canvas.width = size
-                              canvas.height = size
-                              const ctx = canvas.getContext('2d')
-                              const x = (img.width - size) / 2
-                              const y = (img.height - size) / 2
-                              ctx.drawImage(img, x, y, size, size, 0, 0, size, size)
-                              const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-                              stopCamera()
-                              await submitCard(dataUrl)
-                            }
-                            img.src = reader.result
-                          }
-                          reader.readAsDataURL(file)
-                        }
-                      }}
+                  onChange={async e => {
+                    const file = e.target.files && e.target.files[0]
+                    e.target.value = ''
+                    if (file) {
+                      const dataUrl = await readFileAsDataUrl(file)
+                      handleCaptured(dataUrl)
+                    }
+                  }}
                 />
               </label>
               <p style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.8125rem', margin: '0' }}>
@@ -538,7 +566,7 @@ function FormPage() {
             <button
               type="button"
               className="btn btn-ghost"
-              onClick={() => { stopCamera(); setStep('form'); }}
+              onClick={() => { stopCamera(); setPendingPhoto(null); setPhotoMode('camera'); setStep('form'); }}
               style={{ marginTop: 16 }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px', flexShrink: 0 }}>
@@ -548,7 +576,7 @@ function FormPage() {
               Back to Form
             </button>
           </div>
-        )}
+        ))}
 
         {step === 'style' && (
           <StyleSelector
@@ -566,8 +594,6 @@ function FormPage() {
               name: formData.name,
               department: formData.department,
               college: formData.college,
-              funFact: formData.funFact,
-              dreamJob: formData.dreamJob,
               photo,
               quote,
               madeInSeconds,
@@ -583,6 +609,7 @@ function FormPage() {
         )}
       </div>
     </div>
+    </>
   )
 }
 

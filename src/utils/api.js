@@ -58,8 +58,6 @@ export async function fetchDisplay(password, limit = 60) {
       name: ['Aarav', 'Bhavana', 'Charan', 'Divya', 'Karthik', 'Isha'][i],
       college: i % 2 ? 'KRCE' : 'KRCT',
       department: DEPARTMENTS[i % DEPARTMENTS.length],
-      fun_fact: 'Loves late-night coding',
-      dream_job: 'Astronaut',
       photo: samplePhotos[i % 2],
       style: ['futuristic', 'dreamer', 'bold', 'classic'][i % 4],
       made_in_seconds: 42 + i,

@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   try {
     const rows = await sql`
-      SELECT id, card_id, name, department, fun_fact, dream_job, made_in_seconds, consent_given, created_at
+      SELECT id, card_id, name, department, mobile_number AS mobile, email, made_in_seconds, consent_given, created_at
       FROM fresher_entries
       ORDER BY created_at DESC
     `

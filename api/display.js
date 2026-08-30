@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
   try {
     const rows = await sql`
-      SELECT card_id, name, college, department, fun_fact, dream_job, photo, style, made_in_seconds, created_at
+      SELECT card_id, name, college, department, photo, style, made_in_seconds, created_at
       FROM fresher_entries
       WHERE photo IS NOT NULL
       ORDER BY created_at DESC

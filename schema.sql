@@ -1,4 +1,11 @@
 -- Run this in Neon SQL Editor to create the fresher_entries table
+--
+-- The live database already uses `mobile_number` (see the ALTER below).
+--   alter table fresher_entries
+--     add column mobile_number text,
+--     add column email text,
+--     drop column fun_fact,
+--     drop column dream_job;
 
 create table fresher_entries (
   id uuid primary key default gen_random_uuid(),
@@ -6,8 +13,8 @@ create table fresher_entries (
   name text not null,
   college text not null default 'KRCT',
   department text not null,
-  fun_fact text not null,
-  dream_job text not null,
+  mobile_number text not null,
+  email text not null,
   photo text,
   style text not null default 'futuristic',
   made_in_seconds numeric,

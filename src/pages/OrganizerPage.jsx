@@ -29,13 +29,13 @@ function OrganizerPage() {
   const handleExport = useCallback(() => {
     if (entries.length === 0) return
 
-    const headers = ['Card ID', 'Name', 'Department', 'Fun Fact', 'Dream Job', 'Time (s)', 'Consent', 'Created At']
+    const headers = ['Card ID', 'Name', 'Department', 'Mobile', 'Email', 'Time (s)', 'Consent', 'Created At']
     const rows = entries.map(e => [
       e.card_id,
       e.name,
       e.department,
-      e.fun_fact,
-      e.dream_job,
+      e.mobile,
+      e.email,
       e.made_in_seconds ?? '',
       e.consent_given ? 'Yes' : 'No',
       new Date(e.created_at).toLocaleString()
@@ -61,7 +61,7 @@ function OrganizerPage() {
           <div className="header">
             <div className="logo">
               K. Ramakrishnan Group of Institutions
-              <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
+
               <span>ORGANIZER PORTAL</span>
             </div>
             <p className="subtitle">Enter password to access fresher entries</p>
@@ -108,7 +108,7 @@ function OrganizerPage() {
         <div className="header">
           <div className="logo">
             K. Ramakrishnan Group of Institutions
-            <small>Autonomous • NAAC A+ • Anna University Affiliated</small>
+
             <span>ENTRIES</span>
           </div>
           <p className="subtitle">Freshers Day 2026 • All Submissions</p>
@@ -125,8 +125,8 @@ function OrganizerPage() {
                 <th>Card ID</th>
                 <th>Name</th>
                 <th>Department</th>
-                <th>Fun Fact</th>
-                <th>Dream Job</th>
+                <th>Mobile</th>
+                <th>Email</th>
                 <th>Time</th>
                 <th>Consent</th>
                 <th>Created</th>
@@ -138,10 +138,8 @@ function OrganizerPage() {
                   <td style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--accent)' }}>{entry.card_id}</td>
                   <td style={{ fontWeight: 600 }}>{entry.name}</td>
                   <td style={{ fontSize: '0.8125rem' }}>{entry.department}</td>
-                  <td style={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {entry.fun_fact}
-                  </td>
-                  <td style={{ fontWeight: 500 }}>{entry.dream_job}</td>
+                  <td style={{ fontSize: '0.8125rem' }}>{entry.mobile}</td>
+                  <td style={{ fontSize: '0.8125rem' }}>{entry.email}</td>
                   <td style={{ fontFamily: 'var(--font-mono)', color: entry.made_in_seconds <= 60 ? 'var(--success)' : 'var(--muted)' }}>
                     {entry.made_in_seconds ?? '-'}s
                   </td>

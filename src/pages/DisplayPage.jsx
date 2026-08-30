@@ -124,8 +124,6 @@ function DisplayPage() {
               name: current.name,
               department: current.department,
               college: current.college,
-              funFact: current.fun_fact,
-              dreamJob: current.dream_job,
               photo: current.photo,
               quote: getRandomQuote(),
               selectedStyle: current.style

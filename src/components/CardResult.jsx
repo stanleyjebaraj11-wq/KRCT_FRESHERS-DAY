@@ -1,6 +1,4 @@
-import { forwardRef, useImperativeHandle, useEffect, useState } from 'react'
-import QRCode from 'qrcode'
-import logo from '../assets/logo.svg'
+import { forwardRef, useImperativeHandle } from 'react'
 import { BRAND } from '../utils/brand'
 import { COLLEGES } from '../utils/constants'
 
@@ -9,205 +7,40 @@ const CardResult = forwardRef(({ data, onDownload, onCopyCaption, onShare, onWha
     getElement: () => document.getElementById('card-element')
   }))
 
-  const { cardId, name, department, college, funFact, dreamJob, photo, quote, selectedStyle } = data
-  const [qr, setQr] = useState('')
+  const { cardId, name, department, college, photo, quote, selectedStyle } = data
 
   const collegeInfo = COLLEGES[college] || COLLEGES.KRCT
 
-  useEffect(() => {
-    let active = true
-    QRCode.toDataURL(BRAND.qrUrl, {
-      margin: 1,
-      width: 160,
-      color: { dark: '#0a1128', light: '#ffffff' }
-    })
-      .then(url => { if (active) setQr(url) })
-      .catch(() => {})
-    return () => { active = false }
-  }, [])
-
   const photoEl = photo
-    ? <img src={photo} alt={`${name}'s photo`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-    : <span>YOUR PHOTO</span>
-
-  const renderFuturistic = () => (
-    <div className="style-final futuristic-final">
-      <div className="tech-lines line-one" />
-      <div className="tech-lines line-two" />
-      <div className="tech-lines line-three" />
-      <div className="tech-corner top-left" />
-      <div className="tech-corner top-right" />
-      <div className="tech-corner bottom-left" />
-      <div className="tech-corner bottom-right" />
-
-      <div className="sf-header">
-        <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
-        <div className="brand-text">
-          <span className="brand-tagline">ENGINEERING THE FUTURE</span>
-        </div>
-      </div>
-
-      <div className="sf-year">2026</div>
-
-      <div className="sf-photo-circle">
-        <div className="sf-hud-ring">
-          <div className="sf-photo-inner">{photoEl}</div>
-        </div>
-      </div>
-
-      <div className="sf-dept">{department}</div>
-
-      <div className="sf-side-text">FUTURISTIC</div>
-
-      <div className="sf-bottom">
-        <p className="sf-welcome">WELCOME, FUTURE</p>
-        <h2 className="sf-name">{name}!</h2>
-        <p className="sf-quote">"{quote || 'The future is being built by you.'}"</p>
-        <div className="sf-fields">
-          <div className="sf-field"><span>Fun Fact:</span> {funFact}</div>
-          <div className="sf-field"><span>Dream Job:</span> {dreamJob}</div>
-        </div>
-        <div className="sf-qr">
-          {qr && <img src={qr} alt="QR" />}
-          <span>#{cardId}</span>
-        </div>
-      </div>
-
-      <div className="sf-building-line">▱ ▰ ▱ ▰ ▱ ▰ ▱</div>
-    </div>
-  )
-
-  const renderDreamer = () => (
-    <div className="style-final dreamer-final">
-      <div className="df-stars">✦ · ✧ · ★</div>
-      <div className="df-moon">☾</div>
-
-      <div className="df-header">
-        <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
-        <div className="brand-text">
-          <span className="brand-tagline">DREAM • BELIEVE • ACHIEVE</span>
-        </div>
-      </div>
-
-      <div className="df-photo-ring">
-        <div className="df-photo-inner">{photoEl}</div>
-      </div>
-
-      <div className="df-dept">{department}</div>
-
-      <div className="df-side-text">The future is yours</div>
-
-      <div className="df-bottom">
-        <p className="df-welcome">WELCOME, FUTURE</p>
-        <h2 className="df-name">{name}!</h2>
-        <div className="df-divider">✦</div>
-        <p className="df-quote">"{quote || 'Dream boldly. Your journey is just beginning.'}"</p>
-        <div className="df-fields">
-          <div className="df-field"><span>Fun Fact:</span> {funFact}</div>
-          <div className="df-field"><span>Dream Job:</span> {dreamJob}</div>
-        </div>
-        <div className="df-qr">
-          {qr && <img src={qr} alt="QR" />}
-          <span>#{cardId}</span>
-        </div>
-      </div>
-
-      <div className="df-cloud df-cloud-one" />
-      <div className="df-cloud df-cloud-two" />
-    </div>
-  )
-
-  const renderBold = () => (
-    <div className="style-final bold-final">
-      <div className="bf-dots" />
-      <div className="bf-slash bf-slash-one" />
-      <div className="bf-slash bf-slash-two" />
-
-      <div className="bf-header">
-        <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
-        <div className="brand-text">
-          <span className="brand-tagline">RISE. FOCUS. CONQUER.</span>
-        </div>
-      </div>
-
-      <div className="bf-bg-text">RISE<br />FOCUS<br />CONQUER</div>
-
-      <div className="bf-photo-frame">
-        <div className="bf-photo-inner">{photoEl}</div>
-      </div>
-
-      <div className="bf-dept">{department}</div>
-
-      <div className="bf-bottom">
-        <p className="bf-welcome">WELCOME, FUTURE</p>
-        <h2 className="bf-name">{name}!</h2>
-        <p className="bf-quote">"{quote || 'Don\'t just chase the future. Create it.'}"</p>
-        <div className="bf-fields">
-          <div className="bf-field"><span>Fun Fact:</span> {funFact}</div>
-          <div className="bf-field"><span>Dream Job:</span> {dreamJob}</div>
-        </div>
-        <div className="bf-strip">BUILD YOUR LEGACY</div>
-        <div className="bf-qr">
-          {qr && <img src={qr} alt="QR" />}
-          <span>#{cardId}</span>
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderClassic = () => (
-    <div className="style-final classic-final">
-      <div className="cf-border" />
-
-      <div className="cf-header">
-        <div className="cf-logo">
-          <img className="card-college-logo" src={collegeInfo.logo} alt={collegeInfo.short} />
-        </div>
-        <div>
-          <strong>{collegeInfo.short}</strong>
-        </div>
-      </div>
-
-      <div className="cf-line">───── ✦ ─────</div>
-
-      <div className="cf-photo-ring">
-        <div className="cf-photo-inner">{photoEl}</div>
-      </div>
-
-      <div className="cf-dept">{department}</div>
-
-      <div className="cf-leaves cf-left">❯❯❯</div>
-      <div className="cf-leaves cf-right">❮❮❮</div>
-
-      <div className="cf-bottom">
-        <p className="cf-welcome">WELCOME, FUTURE</p>
-        <h2 className="cf-name">{name}!</h2>
-        <div className="cf-divider">─── ✦ ───</div>
-        <p className="cf-quote">"{quote || 'Every great journey begins with a single step.'}"</p>
-        <div className="cf-fields">
-          <div className="cf-field"><span>Fun Fact:</span> {funFact}</div>
-          <div className="cf-field"><span>Dream Job:</span> {dreamJob}</div>
-        </div>
-        <span className="cf-motto">LEARN • GROW • EXCEL</span>
-        <div className="cf-qr">
-          {qr && <img src={qr} alt="QR" />}
-          <span>#{cardId}</span>
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderers = {
-    futuristic: renderFuturistic,
-    dreamer: renderDreamer,
-    bold: renderBold,
-    classic: renderClassic
-  }
+    ? <img className="krct-photo-img" src={photo} alt={`${name}'s photo`} />
+    : <span className="krct-photo-placeholder">YOUR PHOTO</span>
 
   return (
     <div>
-      <div id="card-element" className={`style-card-final style-card-${selectedStyle || 'futuristic'}`}>
-        {(renderers[selectedStyle] || renderFuturistic)()}
+      <div id="card-element" className={`style-card-final krct-card ${selectedStyle || 'futuristic'}-final`}>
+        <div className="krct-header">
+          <img className="krct-brand" src={collegeInfo.logo} alt={collegeInfo.short} />
+          <span className="krct-year">2026</span>
+        </div>
+
+        <div className="krct-identity">
+          <div className="krct-photo">{photoEl}</div>
+          <p className="krct-eyebrow">WELCOME, FRESHER</p>
+          <h2 className="krct-name">{name}</h2>
+          <p className="krct-dept">{department}</p>
+        </div>
+
+        <div className="krct-quote">
+          <span className="krct-quote-icon" aria-hidden="true">❞</span>
+          <p className="krct-quote-text">{quote || 'Make today count, tomorrow will thank you.'}</p>
+        </div>
+
+        <div className="krct-footer">
+          <div className="krct-footer-row">
+            <span className="krct-hashtag">{BRAND.hashtag}</span>
+            <span className="krct-card-id">#{cardId}</span>
+          </div>
+        </div>
       </div>
 
       <div className="card-actions" style={hideActions ? { display: 'none' } : undefined}>
