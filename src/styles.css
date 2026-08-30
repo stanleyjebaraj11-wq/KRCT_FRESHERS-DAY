@@ -1202,6 +1202,91 @@ label {
   --krct-logo-bg: linear-gradient(135deg, #06233f, #0a3056);
 }
 
+/* ---- Decorative effects per theme (match the style-selector previews) ---- */
+
+/* Futuristic: faint tech grid + glowing frame */
+.futuristic-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(103, 220, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(103, 220, 255, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.futuristic-final::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border: 1px solid rgba(103, 220, 255, 0.28);
+  border-radius: 14px;
+  box-shadow: inset 0 0 22px rgba(103, 220, 255, 0.08);
+  pointer-events: none;
+}
+
+/* Dreamer: soft moon glow top-right + tiny stars */
+.dreamer-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 85% 10%, rgba(255, 209, 232, 0.32), transparent 42%),
+    radial-gradient(1.5px 1.5px at 15% 18%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 30% 8%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 72% 26%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 12% 55%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 88% 60%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(2px 2px at 46% 6%, rgba(255, 255, 255, 0.6), transparent);
+  pointer-events: none;
+}
+.dreamer-final::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(255, 209, 232, 0.18);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+/* Bold: red energy slashes + top ember glow */
+.bold-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(115deg, rgba(240, 34, 34, 0.07) 0 2px, transparent 2px 26px);
+}
+.bold-final::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(130% 60% at 50% -5%, rgba(240, 34, 34, 0.16), transparent 60%);
+  pointer-events: none;
+}
+
+/* Classic: gold double frame + flourish under the footer */
+.classic-final::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(255, 200, 69, 0.32);
+  box-shadow: inset 0 0 0 4px rgba(255, 200, 69, 0.06);
+  border-radius: 14px;
+}
+.classic-final::after {
+  content: '✦ ✧ ✦';
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  color: rgba(255, 200, 69, 0.45);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  pointer-events: none;
+}
+
 /* DREAMER FINAL */
 .dreamer-final {
   background: radial-gradient(circle at 50% 15%, rgba(255,194,242,0.65), transparent 22%), linear-gradient(180deg, #241c58, #5d3577 55%, #b36b91);
